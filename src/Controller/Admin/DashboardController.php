@@ -3,6 +3,9 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Category;
+use App\Entity\City;
+use App\Entity\CountryRegion;
+use App\Entity\OlxPartnerLog;
 use App\Entity\User;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
@@ -46,7 +49,17 @@ class DashboardController extends AbstractDashboardController
     public function configureMenuItems(): iterable
     {
         yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
-        yield MenuItem::linkToCrud('User', 'fa fa-user', User::class);
-        yield MenuItem::linkToCrud('Category', 'fa fa-list', Category::class);
+        yield MenuItem::linkToCrud('Users', 'fa fa-user', User::class);
+
+        yield MenuItem::subMenu('Dictionaries', 'fa fa-book')->setSubItems([
+            MenuItem::linkToCrud('Categories', 'fa fa-list', Category::class),
+            MenuItem::linkToCrud('Country regions', 'fa fa-map-location-dot', CountryRegion::class),
+            MenuItem::linkToCrud('Cities', 'fa fa-city', City::class),
+        ]);
+
+        yield MenuItem::subMenu('Logs', 'fa fa-bug')->setSubItems([
+            MenuItem::linkToCrud('OLX Partner API logs', 'fa fa-bug', OlxPartnerLog::class),
+            //MenuItem::linkToCrud('OLX Public API logs', 'fa fa-bug', OlxPublicLog::class) //TODO,
+        ]);
     }
 }

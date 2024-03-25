@@ -3,7 +3,7 @@
 namespace App\OlxPartnerApi\Model;
 
 /**
- * This class stores all possible OLX Partner API endpoints with their parameters and data keys.
+ * This class stores required OLX Partner API endpoints with their parameters and data keys.
  */
 enum OlxPartnerApi
 {
@@ -16,8 +16,8 @@ enum OlxPartnerApi
         return match($this)
         {
             self::OAuth => '/open/oauth/token',
-            self::GetCategory => '/categories/{category_id}',
-            self::ListCategories => '/categories',
+            self::GetCategory => '/partner/categories/{category_id}',
+            self::ListCategories => '/partner/categories',
         };
     }
 
@@ -36,40 +36,8 @@ enum OlxPartnerApi
         return match($this)
         {
             self::OAuth => 'access_token',
-            self::GetCategory => '',
-            self::ListCategories => '',
-        };
-    }
-
-    public function totalItemsField(): string
-    {
-        return match($this)
-        {
-            default => "total_count"
-        };
-    }
-
-    public function itemsPerPageField(): string
-    {
-        return match($this)
-        {
-            default => "page_count"
-        };
-    }
-
-    public function pageField(): string
-    {
-        return match($this)
-        {
-            default => "page_nr"
-        };
-    }
-
-    public function totalPageField(): string
-    {
-        return match($this)
-        {
-            default => "total_pages"
+            self::GetCategory => 'data',
+            self::ListCategories => 'data',
         };
     }
 
@@ -79,7 +47,8 @@ enum OlxPartnerApi
         {
             default => [
                 'Accept' => 'application/json',
-                'Authentication' => 'Bearer ' . $bearerToken,
+                'Version' => '2.0',
+                'Authorization' => 'Bearer ' . $bearerToken,
             ]
         };
     }

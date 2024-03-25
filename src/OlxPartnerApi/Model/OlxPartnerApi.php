@@ -10,6 +10,8 @@ enum OlxPartnerApi
     case OAuth;
     case GetCategory;
     case ListCategories;
+    case GetCategoryAttributes;
+    case ListCountryRegions;
 
     public function uri() : string
     {
@@ -18,6 +20,8 @@ enum OlxPartnerApi
             self::OAuth => '/open/oauth/token',
             self::GetCategory => '/partner/categories/{category_id}',
             self::ListCategories => '/partner/categories',
+            self::GetCategoryAttributes => '/partner/categories/{category_id}/attributes',
+            self::ListCountryRegions => '/partner/regions',
         };
     }
 
@@ -28,6 +32,8 @@ enum OlxPartnerApi
             self::OAuth => 'POST',
             self::GetCategory => 'GET',
             self::ListCategories => 'GET',
+            self::GetCategoryAttributes => 'GET',
+            self::ListCountryRegions => 'GET',
         };
     }
 
@@ -38,6 +44,8 @@ enum OlxPartnerApi
             self::OAuth => 'access_token',
             self::GetCategory => 'data',
             self::ListCategories => 'data',
+            self::GetCategoryAttributes => 'data',
+            self::ListCountryRegions => 'data',
         };
     }
 

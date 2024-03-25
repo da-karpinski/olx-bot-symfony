@@ -12,6 +12,7 @@ enum OlxPartnerApi
     case ListCategories;
     case GetCategoryAttributes;
     case ListCountryRegions;
+    case ListCities;
 
     public function uri() : string
     {
@@ -22,6 +23,7 @@ enum OlxPartnerApi
             self::ListCategories => '/partner/categories',
             self::GetCategoryAttributes => '/partner/categories/{category_id}/attributes',
             self::ListCountryRegions => '/partner/regions',
+            self::ListCities => '/partner/cities',
         };
     }
 
@@ -34,6 +36,7 @@ enum OlxPartnerApi
             self::ListCategories => 'GET',
             self::GetCategoryAttributes => 'GET',
             self::ListCountryRegions => 'GET',
+            self::ListCities => 'GET',
         };
     }
 
@@ -46,6 +49,7 @@ enum OlxPartnerApi
             self::ListCategories => 'data',
             self::GetCategoryAttributes => 'data',
             self::ListCountryRegions => 'data',
+            self::ListCities => 'data',
         };
     }
 

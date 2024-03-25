@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\CountryRegionRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CountryRegionRepository::class)]
@@ -18,6 +20,14 @@ class CountryRegion
 
     #[ORM\Column(length: 60)]
     private ?string $name = null;
+
+    #[ORM\OneToMany(targetEntity: City::class, mappedBy: 'region')]
+    private Collection $cities;
+
+    public function __construct()
+    {
+        $this->cities = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -44,6 +54,36 @@ class CountryRegion
     public function setName(string $name): static
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, City>
+     */
+    public function getCities(): Collection
+    {
+        return $this->cities;
+    }
+
+    public function addCity(City $city): static
+    {
+        if (!$this->cities->contains($city)) {
+            $this->cities->add($city);
+            $city->setRegion($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCity(City $city): static
+    {
+        if ($this->cities->removeElement($city)) {
+            // set the owning side to null (unless already changed)
+            if ($city->getRegion() === $this) {
+                $city->setRegion(null);
+            }
+        }
 
         return $this;
     }

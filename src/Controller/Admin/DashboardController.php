@@ -7,6 +7,9 @@ use App\Entity\City;
 use App\Entity\CountryRegion;
 use App\Entity\OlxPartnerLog;
 use App\Entity\User;
+use App\Service\CategoryService;
+use Doctrine\ORM\EntityManagerInterface;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
@@ -15,11 +18,24 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class DashboardController extends AbstractDashboardController
 {
+    public function __construct(
+        private readonly EntityManagerInterface $em,
+        private readonly CategoryService $categoryService,
+    )
+    {
+    }
+
     #[Route('/', name: 'dashboard')]
     public function index(): Response
     {
 
-        return $this->render('@EasyAdmin/page/content.html.twig');
+        return $this->render('dashboard.html.twig', [
+            'countryRegions' => $this->em->getRepository(CountryRegion::class)->findAll(),
+            'mainCategories' => $this->categoryService->getMainCategories(),
+        ]);
+
+
+        //return $this->render('@EasyAdmin/page/content.html.twig');
 
         //return parent::index();
 
@@ -46,20 +62,27 @@ class DashboardController extends AbstractDashboardController
             ->setTitle('OLX Bot');
     }
 
+    public function configureAssets(): Assets
+    {
+        return Assets::new()
+            ->addJsFile("https://code.jquery.com/jquery-3.7.1.min.js")
+            ->addCssFile("https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/css/bootstrap-select.min.css")
+            ->addJsFile("https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/js/bootstrap-select.min.js")
+            ;
+    }
+
     public function configureMenuItems(): iterable
     {
         yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
         yield MenuItem::linkToCrud('Users', 'fa fa-user', User::class);
 
-        yield MenuItem::subMenu('Dictionaries', 'fa fa-book')->setSubItems([
-            MenuItem::linkToCrud('Categories', 'fa fa-list', Category::class),
-            MenuItem::linkToCrud('Country regions', 'fa fa-map-location-dot', CountryRegion::class),
-            MenuItem::linkToCrud('Cities', 'fa fa-city', City::class),
-        ]);
+        yield MenuItem::section('Dictionaries');
+        yield MenuItem::linkToCrud('Categories', 'fa fa-list', Category::class);
+        yield MenuItem::linkToCrud('Country regions', 'fa fa-map-location-dot', CountryRegion::class);
+        yield MenuItem::linkToCrud('Cities', 'fa fa-city', City::class);
 
-        yield MenuItem::subMenu('Logs', 'fa fa-bug')->setSubItems([
-            MenuItem::linkToCrud('OLX Partner API logs', 'fa fa-bug', OlxPartnerLog::class),
-            //MenuItem::linkToCrud('OLX Public API logs', 'fa fa-bug', OlxPublicLog::class) //TODO,
-        ]);
+        yield MenuItem::section('Logs');
+        yield MenuItem::linkToCrud('OLX Partner API logs', 'fa fa-bug', OlxPartnerLog::class);
+        //yield MenuItem::linkToCrud('OLX Public API logs', 'fa fa-bug', OlxPublicLog::class); //TODO
     }
 }

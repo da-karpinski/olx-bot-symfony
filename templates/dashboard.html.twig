@@ -1,0 +1,120 @@
+{% extends '@!EasyAdmin/layout.html.twig' %}
+
+{% block body_id 'easyadmin-dashboard' %}
+
+{% block main %}
+
+    <style>
+        .hidden{
+            display: none;
+        }
+    </style>
+
+<h1>Welcome back, %name%</h1>
+
+    <div class="row">
+        <div class="col-md-6">
+
+            <br/><br/>
+            <h3>Select city:</h3>
+            <label for="countryRegions">Region:</label>
+            <select id="countryRegions" class="selectpicker" data-live-search="true">
+                {% for region in countryRegions %}
+                    <option data-id="{{ region.getId() }}">{{ region.getName() }}</option>
+                {% endfor %}
+            </select>
+            <br/><br/>
+            <label for="cities">City:</label>
+            <select id="cities" class="selectpicker" data-live-search="true"></select>
+
+
+            <br/><br/><br/>
+            <h3>Select category:</h3>
+            <label for="mainCategories">Main category:</label>
+            <select id="mainCategories" class="selectpicker" data-live-search="true">
+                {% for category in mainCategories %}
+                    <option data-id="{{ category.id }}" data-has-children="{{ category.hasChildren }}">{{ category.name }}</option>
+                {% endfor %}
+            </select>
+            <br/><br/>
+
+            <div id="firstSubcategoryContainer" class="hidden">
+                <label for="firstSubcategory">First subcategory:</label>
+                <select id="firstSubcategory" class="selectpicker" data-live-search="true"></select>
+            </div>
+            <br/>
+
+            <div id="secondSubcategoryContainer" class="hidden">
+                <label for="secondSubcategory">Second subcategory:</label>
+                <select id="secondSubcategory" class="selectpicker" data-live-search="true"></select>
+            </div>
+            <br/>
+
+            <div class="card" style="background-color: darkolivegreen">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fa fa-chart-bar"></i> Your active workers
+                    </h3>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function(){
+
+            $('#countryRegions').on('change', function(e){
+                $.ajax({
+                    url: "/api/city",
+                    type: 'GET',
+                    data: {countryRegion: this.options[this.selectedIndex].dataset.id},
+                    success: function(response){
+                        cityOptions = '';
+                        for(var i = 0; i < response.length; i++){
+                            cityOptions += '<option data-id="'+response[i].id+'">'+response[i].name+'</option>';
+                        }
+                        $('#cities').selectpicker('val', response[0].name).html(cityOptions).selectpicker('refresh').selectpicker('render');
+                    }
+                });
+            });
+
+            $('#mainCategories').on('change', function(e){
+                $.ajax({
+                    url: "/api/category/" + this.options[this.selectedIndex].dataset.id + "/subcategories",
+                    type: 'GET',
+                    data: {},
+                    success: function(response){
+                        subcategoryOptions = '';
+                        for(var i = 0; i < response.length; i++){
+                            subcategoryOptions += '<option data-id="'+response[i].id+'">'+response[i].name+'</option>';
+                        }
+                        $('#firstSubcategory').selectpicker('val', response[0].name).html(subcategoryOptions).selectpicker('refresh').selectpicker('render');
+                        $('#firstSubcategoryContainer').removeClass('hidden');
+                    }
+                });
+            });
+
+            $('#firstSubcategory').on('change', function(e){
+                $.ajax({
+                    url: "/api/category/" + this.options[this.selectedIndex].dataset.id + "/subcategories",
+                    type: 'GET',
+                    data: {},
+                    success: function(response){
+                        subcategoryOptions = '';
+                        for(var i = 0; i < response.length; i++){
+                            subcategoryOptions += '<option data-id="'+response[i].id+'">'+response[i].name+'</option>';
+                        }
+                        $('#secondSubcategory').selectpicker('val', response[0].name).html(subcategoryOptions).selectpicker('refresh').selectpicker('render');
+                        $('#secondSubcategoryContainer').removeClass('hidden');
+                    }
+                });
+            });
+
+            $('#secondSubcategory').on('change', function(e){
+                console.log(this.options[this.selectedIndex].dataset.id);
+            });
+
+        });
+    </script>
+{% endblock %}

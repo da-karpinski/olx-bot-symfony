@@ -3,14 +3,15 @@
 namespace App\Service;
 
 use App\Entity\Category;
+use App\OlxPartnerApi\Service\Category\GetCategoryAttributesService;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class CategoryService
 {
     public function __construct(
         private readonly EntityManagerInterface $em,
-        private readonly SerializerInterface $serializer,
+        private readonly GetCategoryAttributesService $getCategoryAttributesService,
     )
     {
     }
@@ -23,8 +24,40 @@ class CategoryService
 
     public function getSubcategories(int $parentId): array
     {
-        $subcategories = $this->em->getRepository(Category::class)->findBy(['parent' => $parentId]);
-        return $this->toArray($subcategories);
+        if($subcategories = $this->em->getRepository(Category::class)->findBy(['parent' => $parentId])){
+            return $this->toArray($subcategories);
+        }else{
+            throw new NotFoundHttpException('Parent category not found');
+        }
+    }
+
+    public function getCategoryAttributes(int $categoryId): array
+    {
+        if($category = $this->em->getRepository(Category::class)->find($categoryId)){
+            return $this->addPriceAttribute(
+                ($this->getCategoryAttributesService)($category->getOlxId())
+            );
+        }else{
+            throw new NotFoundHttpException('Category not found');
+        }
+
+    }
+
+    public function addPriceAttribute(array $attributes): array
+    {
+        array_unshift($attributes, [
+            'code' => 'price',
+            'label' => 'Cena',
+            'unit' => 'PLN',
+            'validation' => [
+                'numeric' => true,
+                'min' => 0,
+                'max' => 999999999
+            ],
+            'values' => []
+        ]);
+
+        return $attributes;
     }
 
     private function toArray(array $collection): array

@@ -29,4 +29,10 @@ class CategoryController extends AbstractController
     {
         return $this->json($this->categoryService->getSubcategories($id));
     }
+
+    #[Route(path: '/{id}/attributes', name: 'api_category_attributes_list')]
+    public function listAttributes(int $id): Response
+    {
+        return $this->json($this->categoryService->getCategoryAttributes($id));
+    }
 }

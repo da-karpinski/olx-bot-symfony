@@ -20,6 +20,8 @@ class SecurityController extends AbstractController
         $lastUsername = $authenticationUtils->getLastUsername();
 
         return $this->render('@EasyAdmin/page/login.html.twig', [
+            'username_label' => 'E-mail',
+            'username_parameter' => '_email',
             'last_username' => $lastUsername,
             'error' => $error,
             'page_title' => 'Login to OLX Bot',

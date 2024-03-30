@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -33,6 +35,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(length: 100)]
     private ?string $name = null;
+
+    #[ORM\OneToMany(targetEntity: Worker::class, mappedBy: 'user', orphanRemoval: true)]
+    private Collection $workers;
+
+    public function __construct()
+    {
+        $this->workers = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -117,6 +127,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setName(string $name): static
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Worker>
+     */
+    public function getWorkers(): Collection
+    {
+        return $this->workers;
+    }
+
+    public function addWorker(Worker $worker): static
+    {
+        if (!$this->workers->contains($worker)) {
+            $this->workers->add($worker);
+            $worker->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeWorker(Worker $worker): static
+    {
+        if ($this->workers->removeElement($worker)) {
+            // set the owning side to null (unless already changed)
+            if ($worker->getUser() === $this) {
+                $worker->setUser(null);
+            }
+        }
 
         return $this;
     }

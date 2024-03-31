@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\CityRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: CityRepository::class)]
 class City
@@ -11,6 +12,7 @@ class City
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['worker:write'])]
     private ?int $id = null;
 
     #[ORM\Column]
@@ -21,6 +23,7 @@ class City
     private ?CountryRegion $region = null;
 
     #[ORM\Column(length: 60)]
+    #[Groups(['worker:write'])]
     private ?string $name = null;
 
     public function getId(): ?int

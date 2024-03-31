@@ -6,6 +6,7 @@ use App\Repository\WorkerRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: WorkerRepository::class)]
 class Worker
@@ -17,29 +18,35 @@ class Worker
 
     #[ORM\ManyToOne(inversedBy: 'workers')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['worker:write'])]
     private ?User $user = null;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['worker:write'])]
     private ?City $city = null;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['worker:write'])]
     private ?Category $category = null;
 
     #[ORM\Column]
+    #[Groups(['worker:write'])]
     private ?bool $enabled = null;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $lastExecutedAt = null;
 
     #[ORM\Column]
+    #[Groups(['worker:write'])]
     private ?int $executionInterval = null;
 
     #[ORM\OneToMany(targetEntity: CategoryAttribute::class, mappedBy: 'worker', orphanRemoval: true)]
+    #[Groups(['worker:write'])]
     private Collection $categoryAttributes;
 
     public function __construct()

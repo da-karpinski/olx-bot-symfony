@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\CategoryAttributeRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: CategoryAttributeRepository::class)]
 class CategoryAttribute
@@ -11,16 +12,19 @@ class CategoryAttribute
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['worker:write'])]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(inversedBy: 'categoryAttributes')]
+    #[ORM\ManyToOne(inversedBy: 'categoryAttributes', cascade: ['persist'])]
     #[ORM\JoinColumn(nullable: false)]
     private ?Worker $worker = null;
 
     #[ORM\Column(length: 60)]
+    #[Groups(['worker:write'])]
     private ?string $attributeCode = null;
 
     #[ORM\Column(length: 60)]
+    #[Groups(['worker:write'])]
     private ?string $attributeValue = null;
 
     public function getId(): ?int

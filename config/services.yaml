@@ -14,6 +14,7 @@ services:
             $olxPartnerApiUrl: '%env(OLX_PARTNER_API_URL)%'
             $olxPartnerClientId: '%env(OLX_PARTNER_CLIENT_ID)%'
             $olxPartnerClientSecret: '%env(OLX_PARTNER_CLIENT_SECRET)%'
+            $olxPublicApiUrl: '%env(OLX_PUBLIC_API_URL)%'
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
@@ -30,5 +31,11 @@ services:
     # OLX Partner API Logger
     app.olx_partner_api.logger.doctrine_handler:
         class: App\OlxPartnerApi\Logger\DoctrineHandler
+        arguments:
+            - "@doctrine.orm.entity_manager"
+
+    # OLX Public API Logger
+    app.olx_public_api.logger.doctrine_handler:
+        class: App\OlxPublicApi\Logger\DoctrineHandler
         arguments:
             - "@doctrine.orm.entity_manager"

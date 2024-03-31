@@ -6,6 +6,7 @@ use App\Entity\Category;
 use App\Entity\City;
 use App\Entity\CountryRegion;
 use App\Entity\OlxPartnerLog;
+use App\Entity\OlxPublicLog;
 use App\Entity\User;
 use App\Service\CategoryService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -83,6 +84,6 @@ class DashboardController extends AbstractDashboardController
 
         yield MenuItem::section('Logs');
         yield MenuItem::linkToCrud('OLX Partner API logs', 'fa fa-bug', OlxPartnerLog::class);
-        //yield MenuItem::linkToCrud('OLX Public API logs', 'fa fa-bug', OlxPublicLog::class); //TODO
+        yield MenuItem::linkToCrud('OLX Public API logs', 'fa fa-bug', OlxPublicLog::class);
     }
 }

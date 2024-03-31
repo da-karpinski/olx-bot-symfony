@@ -49,9 +49,13 @@ class Worker
     #[Groups(['worker:write'])]
     private Collection $categoryAttributes;
 
+    #[ORM\OneToMany(targetEntity: Offer::class, mappedBy: 'worker', orphanRemoval: true)]
+    private Collection $offers;
+
     public function __construct()
     {
         $this->categoryAttributes = new ArrayCollection();
+        $this->offers = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -167,6 +171,36 @@ class Worker
             // set the owning side to null (unless already changed)
             if ($categoryAttribute->getWorker() === $this) {
                 $categoryAttribute->setWorker(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Offer>
+     */
+    public function getOffers(): Collection
+    {
+        return $this->offers;
+    }
+
+    public function addOffer(Offer $offer): static
+    {
+        if (!$this->offers->contains($offer)) {
+            $this->offers->add($offer);
+            $offer->setWorker($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOffer(Offer $offer): static
+    {
+        if ($this->offers->removeElement($offer)) {
+            // set the owning side to null (unless already changed)
+            if ($offer->getWorker() === $this) {
+                $offer->setWorker(null);
             }
         }
 

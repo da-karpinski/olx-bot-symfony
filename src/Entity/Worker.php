@@ -52,10 +52,14 @@ class Worker
     #[ORM\OneToMany(targetEntity: Offer::class, mappedBy: 'worker', orphanRemoval: true)]
     private Collection $offers;
 
+    #[ORM\OneToMany(targetEntity: WorkerIntegration::class, mappedBy: 'worker')]
+    private Collection $workerIntegrations;
+
     public function __construct()
     {
         $this->categoryAttributes = new ArrayCollection();
         $this->offers = new ArrayCollection();
+        $this->workerIntegrations = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -201,6 +205,36 @@ class Worker
             // set the owning side to null (unless already changed)
             if ($offer->getWorker() === $this) {
                 $offer->setWorker(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, WorkerIntegration>
+     */
+    public function getWorkerIntegrations(): Collection
+    {
+        return $this->workerIntegrations;
+    }
+
+    public function addWorkerIntegration(WorkerIntegration $workerIntegration): static
+    {
+        if (!$this->workerIntegrations->contains($workerIntegration)) {
+            $this->workerIntegrations->add($workerIntegration);
+            $workerIntegration->setWorker($this);
+        }
+
+        return $this;
+    }
+
+    public function removeWorkerIntegration(WorkerIntegration $workerIntegration): static
+    {
+        if ($this->workerIntegrations->removeElement($workerIntegration)) {
+            // set the owning side to null (unless already changed)
+            if ($workerIntegration->getWorker() === $this) {
+                $workerIntegration->setWorker(null);
             }
         }
 

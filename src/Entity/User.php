@@ -43,9 +43,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Worker::class, mappedBy: 'user', orphanRemoval: true)]
     private Collection $workers;
 
+    #[ORM\OneToMany(targetEntity: Integration::class, mappedBy: 'user', orphanRemoval: true)]
+    private Collection $integrations;
+
     public function __construct()
     {
         $this->workers = new ArrayCollection();
+        $this->integrations = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -159,6 +163,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($worker->getUser() === $this) {
                 $worker->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Integration>
+     */
+    public function getIntegrations(): Collection
+    {
+        return $this->integrations;
+    }
+
+    public function addIntegration(Integration $integration): static
+    {
+        if (!$this->integrations->contains($integration)) {
+            $this->integrations->add($integration);
+            $integration->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeIntegration(Integration $integration): static
+    {
+        if ($this->integrations->removeElement($integration)) {
+            // set the owning side to null (unless already changed)
+            if ($integration->getUser() === $this) {
+                $integration->setUser(null);
             }
         }
 

@@ -6,8 +6,6 @@ use App\Entity\CategoryAttribute;
 use App\Entity\Worker;
 use App\OlxPublicApi\OlxPublicApiInterface;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class GetOffersForWorkerService
 {
@@ -15,12 +13,11 @@ class GetOffersForWorkerService
     public function __construct(
         private readonly string $olxPublicApiUrl,
         private readonly OlxPublicApiInterface $apiClient,
-        private readonly EntityManagerInterface $em,
     )
     {
     }
 
-    public function __invoke(Worker $worker): void
+    public function __invoke(Worker $worker): array
     {
 
         $defaultQueryParams = [
@@ -49,16 +46,7 @@ class GetOffersForWorkerService
             ],
         );
 
-        if (empty($response['data'])) {
-            throw new NotFoundHttpException('olx_public_api.offers.empty');
-        }
-
-        foreach ($response['data'] as $olxOffer) {
-            //TODO: offer entity
-        }
-
-        $this->em->flush();
-        $this->em->clear();
+        return $response['data'];
     }
 
     private function createQueryParamFromCategoryAttributes(Collection $attributes): array

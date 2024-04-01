@@ -21,6 +21,18 @@ class WorkerRepository extends ServiceEntityRepository
         parent::__construct($registry, Worker::class);
     }
 
+    public function findWorkersToConsume(int $quantity, ?int $offset = 0): array
+    {
+        return $this->createQueryBuilder('w')
+            ->andWhere('w.enabled = true')
+            ->addOrderBy('w.lastExecutedAt', 'ASC')
+            ->setMaxResults($quantity)
+            ->setFirstResult($offset)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
     //    /**
     //     * @return Worker[] Returns an array of Worker objects
     //     */

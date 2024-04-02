@@ -55,11 +55,15 @@ class Worker
     #[ORM\OneToMany(targetEntity: WorkerIntegration::class, mappedBy: 'worker')]
     private Collection $workerIntegrations;
 
+    #[ORM\OneToMany(targetEntity: Notification::class, mappedBy: 'worker')]
+    private Collection $notifications;
+
     public function __construct()
     {
         $this->categoryAttributes = new ArrayCollection();
         $this->offers = new ArrayCollection();
         $this->workerIntegrations = new ArrayCollection();
+        $this->notifications = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -235,6 +239,36 @@ class Worker
             // set the owning side to null (unless already changed)
             if ($workerIntegration->getWorker() === $this) {
                 $workerIntegration->setWorker(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Notification>
+     */
+    public function getNotifications(): Collection
+    {
+        return $this->notifications;
+    }
+
+    public function addNotification(Notification $notification): static
+    {
+        if (!$this->notifications->contains($notification)) {
+            $this->notifications->add($notification);
+            $notification->setWorker($this);
+        }
+
+        return $this;
+    }
+
+    public function removeNotification(Notification $notification): static
+    {
+        if ($this->notifications->removeElement($notification)) {
+            // set the owning side to null (unless already changed)
+            if ($notification->getWorker() === $this) {
+                $notification->setWorker(null);
             }
         }
 

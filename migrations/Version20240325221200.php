@@ -20,7 +20,7 @@ final class Version20240325221200 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('CREATE TABLE country_region (id INT AUTO_INCREMENT NOT NULL, olx_id INT NOT NULL, name VARCHAR(60) NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8');
+        $this->addSql('CREATE TABLE country_region (id INT AUTO_INCREMENT NOT NULL, olx_id INT NOT NULL, name VARCHAR(60) NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4');
     }
 
     public function down(Schema $schema): void

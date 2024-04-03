@@ -14,10 +14,14 @@
         "symfony/flex": "^2",
         "symfony/framework-bundle": "7.0.*",
         "symfony/http-client": "7.0.*",
+        "symfony/mailer": "7.0.*",
         "symfony/monolog-bundle": "^3.10",
         "symfony/runtime": "7.0.*",
         "symfony/serializer": "7.0.*",
-        "symfony/yaml": "7.0.*"
+        "symfony/string": "7.0.*",
+        "symfony/yaml": "7.0.*",
+        "twig/extra-bundle": "^3.8",
+        "twig/string-extra": "^3.8"
     },
     "config": {
         "allow-plugins": {

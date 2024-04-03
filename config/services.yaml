@@ -16,6 +16,9 @@ services:
             $olxPartnerClientId: '%env(OLX_PARTNER_CLIENT_ID)%'
             $olxPartnerClientSecret: '%env(OLX_PARTNER_CLIENT_SECRET)%'
             $olxPublicApiUrl: '%env(OLX_PUBLIC_API_URL)%'
+            $dashboardUrl: '%env(DASHBOARD_URL)%'
+            $contactHelpEmail: '%env(CONTACT_HELP_EMAIL)%'
+            $mailerSendFrom: '%env(MAILER_SEND_FROM)%'
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name

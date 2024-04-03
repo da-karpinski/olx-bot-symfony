@@ -21,6 +21,16 @@ class NotificationRepository extends ServiceEntityRepository
         parent::__construct($registry, Notification::class);
     }
 
+    public function findNotificationsToConsume(int $quantity): array
+    {
+        return $this->createQueryBuilder('n')
+            ->andWhere('n.sentAt IS NULL')
+            ->orderBy('n.createdAt', 'ASC')
+            ->setMaxResults($quantity)
+            ->getQuery()
+            ->getResult();
+    }
+
     //    /**
     //     * @return Notification[] Returns an array of Notification objects
     //     */

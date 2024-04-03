@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\Entity\Offer;
 use App\Entity\Worker;
+use App\Integration\IntegrationInterface;
 use App\OlxPublicApi\Adapter\OfferParameterToEntityAdapter;
 use App\OlxPublicApi\Adapter\OfferToEntityAdapter;
 use App\OlxPublicApi\Service\GetOffersForWorkerService;
@@ -15,6 +16,7 @@ class OfferService
     public function __construct(
         private readonly EntityManagerInterface $em,
         private readonly GetOffersForWorkerService $getOffersForWorkerService,
+        private readonly IntegrationInterface $integration
     )
     {
     }
@@ -32,6 +34,8 @@ class OfferService
             return $results;
         }
 
+        $newOffers = [];
+
         foreach ($offers as $olxOffer) {
 
             $offer = OfferToEntityAdapter::adapt($olxOffer, $worker);
@@ -48,6 +52,7 @@ class OfferService
                         $this->em->persist($offerParameter);
                     }
                 }
+                $newOffers[] = $offer;
                 $results['new']++;
             }
         }
@@ -56,7 +61,27 @@ class OfferService
         $this->em->persist($worker);
         $this->em->flush();
 
+        if(!empty($newOffers)){
+            $this->createNotifications($newOffers, $worker);
+        }
+
         return $results;
+    }
+
+    private function createNotifications(array $offers, Worker $worker): void
+    {
+        $workerIntegrations = $worker->getWorkerIntegrations();
+
+        foreach ($workerIntegrations as $workerIntegration) {
+            $integration = $workerIntegration->getIntegration();
+            $notification = $this->integration->prepareNotification($offers, $worker, $integration);
+
+            if($notification){
+                $this->em->persist($notification);
+            }
+        }
+
+        $this->em->flush();
     }
 
 }

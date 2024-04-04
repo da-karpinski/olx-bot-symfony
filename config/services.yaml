@@ -43,3 +43,9 @@ services:
         class: App\OlxPublicApi\Logger\DoctrineHandler
         arguments:
             - "@doctrine.orm.entity_manager"
+
+    # Integration Logger
+    app.logger.integration_doctrine_handler:
+        class: App\Logger\IntegrationDoctrineHandler
+        arguments:
+            - "@doctrine.orm.entity_manager"

@@ -3,6 +3,7 @@ monolog:
         - deprecation # Deprecations are logged in the dedicated "deprecation" channel when it exists
         - OlxPartnerApi
         - OlxPublicApi
+        - Integration
 
 when@dev:
     monolog:
@@ -34,6 +35,11 @@ when@dev:
                 id: app.olx_public_api.logger.doctrine_handler
                 level: debug
                 channels: [ "OlxPublicApi" ]
+            Integration:
+                type: service
+                id: app.logger.integration_doctrine_handler
+                level: debug
+                channels: [ "Integration" ]
 
 when@test:
     monolog:

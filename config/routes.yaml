@@ -3,3 +3,9 @@ controllers:
         path: ../src/Controller/
         namespace: App\Controller
     type: attribute
+
+integrations:
+    resource:
+        path: ../src/Integration/
+        namespace: App\Integration
+    type: attribute

@@ -8,6 +8,7 @@ namespace App\Integration\Telegram\Model;
 enum TelegramApi
 {
     case sendMessage;
+    case setWebHook;
 
     public function uri() : string
     {
@@ -15,6 +16,7 @@ enum TelegramApi
         return match($this)
         {
             self::sendMessage => $uri . '/sendMessage',
+            self::setWebHook => $uri . '/setWebhook',
         };
     }
 
@@ -23,6 +25,7 @@ enum TelegramApi
         return match($this)
         {
             self::sendMessage => 'POST',
+            self::setWebHook => 'POST',
         };
     }
 
@@ -31,6 +34,7 @@ enum TelegramApi
         return match($this)
         {
             self::sendMessage => 'ok',
+            self::setWebHook => 'ok',
         };
     }
 

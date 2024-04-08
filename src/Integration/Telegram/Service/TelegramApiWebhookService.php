@@ -138,6 +138,7 @@ class TelegramApiWebhookService
             TelegramApi::sendMessage->method(),
             $this->apiUrl . str_replace('{token}', $this->botToken, TelegramApi::sendMessage->uri()),
             [
+                'headers' => $model->headers($this->botToken),
                 'json' => $payload
             ]
         );

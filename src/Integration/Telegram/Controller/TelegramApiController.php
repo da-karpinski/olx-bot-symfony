@@ -18,7 +18,7 @@ class TelegramApiController extends AbstractController
     {
     }
 
-    #[Route(path: '/integration/telegram/webhook', methods: ['POST'])]
+    #[Route(path: '/integration/telegram/webhook', name: 'integration_telegram_webhook', methods: ['POST'])]
     public function integrationTelegramWebhook(Request $request): JsonResponse
     {
         try{

@@ -5,10 +5,12 @@ namespace App\Integration\Email\Service;
 use App\Entity\Notification;
 use App\Entity\Integration;
 use App\Entity\Worker;
-use App\Entity\Offer;
+use App\Exception\IntegrationException;
 use App\Integration\Email\Entity\EmailIntegration;
 use App\Integration\IntegrationInterface;
 use Doctrine\ORM\EntityManagerInterface;
+use Monolog\Level;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 use Twig\Environment;
@@ -16,28 +18,22 @@ use Twig\Environment;
 class IntegrationEmailService implements IntegrationInterface
 {
 
+    public const INTEGRATION_CODE = 'INTEGRATION_EMAIL';
+
     public function __construct(
         private readonly Environment $twig,
         private readonly string $dashboardUrl,
         private readonly string $contactHelpEmail,
         private readonly string $mailerSendFrom,
         private readonly EntityManagerInterface $em,
-        private readonly MailerInterface $mailer
+        private readonly MailerInterface $mailer,
+        private readonly LoggerInterface $integrationLogger
     )
     {
     }
 
-    public function getIntegrationCode(): string
+    public function prepareNotifications(array $offers, Worker $worker, Integration $integration): Notification|array
     {
-        return 'INTEGRATION_EMAIL';
-    }
-
-    public function prepareNotification(array $offers, Worker $worker, Integration $integration): ?Notification
-    {
-
-        if($integration->getIntegrationType()->getIntegrationCode() !== $this->getIntegrationCode()){
-            return null;
-        }
 
         $notification = new Notification();
         $notification->setWorker($worker);
@@ -60,12 +56,8 @@ class IntegrationEmailService implements IntegrationInterface
     {
         $integrationType = $notification->getIntegration()->getIntegrationType();
 
-        if($integrationType->getIntegrationCode() !== $this->getIntegrationCode()){
-            return;
-        }
-
         if(!$integrationType->isEnabled()){
-            //TODO: log send attempt
+            $this->integrationLogger->info('[Email integration] Notification was not sent because integration was disabled.');
             return;
         }
 
@@ -89,7 +81,10 @@ class IntegrationEmailService implements IntegrationInterface
             }
         }
 
-        //TODO: log exception
-        $this->mailer->send($email);
+        try{
+            $this->mailer->send($email);
+        } catch (\Exception $e) {
+            throw new IntegrationException(sprintf('[Email integration] Notification was not sent because of an error: %s', $e->getMessage()), Level::Error, $this->integrationLogger);
+        }
     }
 }

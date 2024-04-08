@@ -4,7 +4,7 @@ namespace App\Service;
 
 use App\Entity\Offer;
 use App\Entity\Worker;
-use App\Integration\IntegrationInterface;
+use App\Integration\IntegrationFactory;
 use App\OlxPublicApi\Adapter\OfferParameterToEntityAdapter;
 use App\OlxPublicApi\Adapter\OfferToEntityAdapter;
 use App\OlxPublicApi\Service\GetOffersForWorkerService;
@@ -16,7 +16,7 @@ class OfferService
     public function __construct(
         private readonly EntityManagerInterface $em,
         private readonly GetOffersForWorkerService $getOffersForWorkerService,
-        private readonly IntegrationInterface $integration
+        private readonly IntegrationFactory $integrationFactory
     )
     {
     }
@@ -74,10 +74,14 @@ class OfferService
 
         foreach ($workerIntegrations as $workerIntegration) {
             $integration = $workerIntegration->getIntegration();
-            $notification = $this->integration->prepareNotification($offers, $worker, $integration);
+            $notifications = $this->integrationFactory->getIntegration($integration->getIntegrationType()->getIntegrationCode())->prepareNotifications($offers, $worker, $integration);
 
-            if($notification){
-                $this->em->persist($notification);
+            if(is_array($notifications)) {
+                foreach ($notifications as $notification) {
+                    $this->em->persist($notification);
+                }
+            }else{
+                $this->em->persist($notifications);
             }
         }
 

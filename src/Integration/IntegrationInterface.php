@@ -15,7 +15,6 @@ interface IntegrationInterface
      * @param Integration $integration
      * @return Notification|null
      */
-    public function prepareNotification(array $offers, Worker $worker, Integration $integration): ?Notification;
+    public function prepareNotifications(array $offers, Worker $worker, Integration $integration): Notification|array;
     public function sendNotification(Notification $notification): void;
-    public function getIntegrationCode(): string;
 }

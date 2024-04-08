@@ -3,7 +3,7 @@
 namespace App\Command;
 
 use App\Entity\Notification;
-use App\Integration\IntegrationInterface;
+use App\Integration\IntegrationFactory;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -20,7 +20,7 @@ class ConsumeNotificationsCommand extends Command
 {
     public function __construct(
         private readonly EntityManagerInterface $em,
-        private readonly IntegrationInterface $integration
+        private readonly IntegrationFactory $integrationFactory
     )
     {
         parent::__construct();
@@ -59,7 +59,7 @@ class ConsumeNotificationsCommand extends Command
             ));
 
             try{
-                $this->integration->sendNotification($notification);
+                $this->integrationFactory->getIntegration($notification->getIntegration()->getIntegrationType()->getIntegrationCode())->sendNotification($notification);
                 $notification->setSentAt(new \DateTimeImmutable());
                 $this->em->persist($notification);
                 $this->em->flush();

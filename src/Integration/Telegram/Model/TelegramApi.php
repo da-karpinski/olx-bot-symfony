@@ -38,7 +38,7 @@ enum TelegramApi
         };
     }
 
-    public function headers(string $bearerToken) : array
+    public function headers() : array
     {
         return match($this)
         {

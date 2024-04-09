@@ -41,7 +41,7 @@ class EntityExistsValidator extends ConstraintValidator
             $entity = $this->em->getRepository($constraint->entityClass)->findOneBy([$constraint->identifier => $value]);
         } catch(Exception $e) {
             $this->context
-                ->buildViolation('entity.not.callable')
+                ->buildViolation('entity.not-callable')
                 ->addViolation();
             return;
         }

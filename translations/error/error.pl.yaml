@@ -1,0 +1,14 @@
+error:
+  olx-partner-api:
+    oauth-error: 'Błąd autoryzacji OAuth.'
+    category:
+      parent-not-found: 'Nie znaleziono kategorii nadrzędnej.'
+      not-found: 'Nie znaleziono kategorii.'
+      attributes-not-found: 'Nie znaleziono atrybutów dla tej kategorii.'
+
+  category:
+    not-found: 'Nie znaleziono kategorii.'
+    attributes-not-found: 'Nie znaleziono atrybutów dla tej kategorii.'
+
+  worker:
+    create-insufficient-permissions: 'Niewystarczające uprawnienia do utworzenia pracownika.'

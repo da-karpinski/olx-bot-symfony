@@ -8,7 +8,7 @@ use Symfony\Component\Validator\Constraint;
 #[\Attribute]
 class EntityExists extends Constraint
 {
-    public $message = 'entity.doesnotexist';
+    public $message = 'entity.does-not-exist';
 
     public $mode = 'strict';
 

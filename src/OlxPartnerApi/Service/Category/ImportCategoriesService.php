@@ -34,7 +34,7 @@ class ImportCategoriesService
         );
 
         if (empty($response[$this->model->dataKey()])) {
-            throw new NotFoundHttpException('olx_partner_api.category.empty');
+            throw new NotFoundHttpException('There are no categories in the response.');
         }
 
         foreach ($response[$this->model->dataKey()] as $olxCategory) {
@@ -53,7 +53,7 @@ class ImportCategoriesService
                     try{
                         $parentCategory = ($this->getCategoryService)($olxCategory['parent_id']);
                     }catch (\Exception $e) {
-                        throw new NotFoundHttpException('olx_partner_api.category.parent_not_found');
+                        throw new NotFoundHttpException('Parent category not found.');
                     }
                 }
                 $category = CategoryToEntityAdapter::adapt($olxCategory, $parentCategory);

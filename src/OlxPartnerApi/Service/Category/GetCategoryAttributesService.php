@@ -7,6 +7,7 @@ use App\OlxPartnerApi\OlxPartnerApiInterface;
 use App\OlxPartnerApi\Service\OAuthService;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class GetCategoryAttributesService
 {
@@ -16,6 +17,7 @@ class GetCategoryAttributesService
         private readonly OlxPartnerApiInterface $apiClient,
         private readonly string $olxPartnerApiUrl,
         private readonly OAuthService $oauthService,
+        private readonly TranslatorInterface $translator
     )
     {
         $this->model = OlxPartnerApi::GetCategoryAttributes;
@@ -33,7 +35,7 @@ class GetCategoryAttributesService
             );
         }catch (\Exception $e){
             if($e->getCode() === Response::HTTP_NOT_FOUND){
-                throw new NotFoundHttpException('olx_partner_api.category_attributes.notFound');
+                throw new NotFoundHttpException($this->translator->trans('error.olx-partner-api.category.attributes-not-found'));
             }
         }
 

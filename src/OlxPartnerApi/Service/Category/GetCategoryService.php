@@ -10,6 +10,7 @@ use App\OlxPartnerApi\Service\OAuthService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class GetCategoryService
 {
@@ -20,6 +21,7 @@ class GetCategoryService
         private readonly string $olxPartnerApiUrl,
         private readonly OAuthService $oauthService,
         private readonly EntityManagerInterface $em,
+        private readonly TranslatorInterface $translator
     )
     {
         $this->model = OlxPartnerApi::GetCategory;
@@ -37,7 +39,7 @@ class GetCategoryService
             );
         }catch (\Exception $e){
             if($e->getCode() === Response::HTTP_NOT_FOUND){
-                throw new NotFoundHttpException('olx_partner_api.category.notFound');
+                throw new NotFoundHttpException($this->translator->trans('error.olx-partner-api.category.not-found', [], 'error'));
             }
         }
 
@@ -53,7 +55,7 @@ class GetCategoryService
                 try{
                     $parentCategory = ($this)($olxCategory['parent_id']);
                 }catch (\Exception $e) {
-                    throw new NotFoundHttpException('olx_partner_api.category.parent_not_found');
+                    throw new NotFoundHttpException($this->translator->trans('error.olx-partner-api.category.parent-not-found', [], 'error'));
                 }
             }
             $category = CategoryToEntityAdapter::adapt($olxCategory, $parentCategory);

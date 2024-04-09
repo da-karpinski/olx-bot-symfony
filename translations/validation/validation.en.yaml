@@ -1,0 +1,3 @@
+entity:
+  does-not-exist: "The entity does not exist."
+  not-callable: "The entity is not callable."

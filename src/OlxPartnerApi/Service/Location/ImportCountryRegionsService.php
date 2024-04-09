@@ -34,7 +34,7 @@ class ImportCountryRegionsService
             );
         }catch (\Exception $e){
             if($e->getCode() === Response::HTTP_NOT_FOUND){
-                throw new NotFoundHttpException('olx_partner_api.country_regions.notFound');
+                throw new NotFoundHttpException('There are no country regions in the response.');
             }
         }
 

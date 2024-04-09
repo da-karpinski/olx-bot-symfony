@@ -41,7 +41,7 @@ class ImportCitiesService
         );
 
         if (empty($response[$this->model->dataKey()])) {
-            throw new NotFoundHttpException('olx_partner_api.cities.empty');
+            throw new NotFoundHttpException('There are no cities in the response.');
         }
 
         foreach ($response[$this->model->dataKey()] as $olxCity) {

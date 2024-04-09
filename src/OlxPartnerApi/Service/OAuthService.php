@@ -6,6 +6,7 @@ use App\OlxPartnerApi\Adapter\OAuthAdapter;
 use App\OlxPartnerApi\Model\OlxPartnerApi;
 use App\OlxPartnerApi\OlxPartnerApiInterface;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class OAuthService
 {
@@ -16,6 +17,7 @@ class OAuthService
         private readonly string $olxPartnerApiUrl,
         private readonly string $olxPartnerClientId,
         private readonly string $olxPartnerClientSecret,
+        private readonly TranslatorInterface $translator
     )
     {
         $this->model = OlxPartnerApi::OAuth;
@@ -31,7 +33,7 @@ class OAuthService
         );
 
         if (!isset($response[$this->model->dataKey()])) {
-            throw new AccessDeniedHttpException('olx_partner_api.oauth.error');
+            throw new AccessDeniedHttpException($this->translator->trans('error.olx-partner-api.oauth-error', [], 'error'));
         }
 
         return $response[$this->model->dataKey()];

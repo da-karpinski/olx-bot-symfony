@@ -1,0 +1,14 @@
+error:
+  olx-partner-api:
+    oauth-error: 'OAuth authorization error.'
+    category:
+      parent-not-found: 'Parent category not found.'
+      not-found: 'Category not found.'
+      attributes-not-found: 'Category attributes not found.'
+
+  category:
+    not-found: 'Category not found.'
+    attributes-not-found: 'Category attributes not found.'
+
+  worker:
+    create-insufficient-permissions: 'Insufficient permissions to create worker.'

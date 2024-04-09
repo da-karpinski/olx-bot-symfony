@@ -11,6 +11,7 @@ use App\Payload\Request\WorkerRequestPayload;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class WorkerService
 {
@@ -18,6 +19,7 @@ class WorkerService
     public function __construct(
         private readonly EntityManagerInterface $em,
         private readonly Security $security,
+        private readonly TranslatorInterface $translator
     )
     {
     }
@@ -30,7 +32,7 @@ class WorkerService
             if($this->security->isGranted('ROLE_ADMIN')){
                 $worker->setUser($this->em->getRepository(User::class)->find($payload->getUser()));
             }else{
-                throw new AccessDeniedHttpException('api.worker.create.insufficient_permissions');
+                throw new AccessDeniedHttpException($this->translator->trans('error.worker.create-insufficient-permissions', [], 'error'));
             }
         }else{
             $worker->setUser($this->security->getUser());

@@ -6,12 +6,14 @@ use App\Entity\Category;
 use App\OlxPartnerApi\Service\Category\GetCategoryAttributesService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class CategoryService
 {
     public function __construct(
         private readonly EntityManagerInterface $em,
         private readonly GetCategoryAttributesService $getCategoryAttributesService,
+        private readonly TranslatorInterface $translator
     )
     {
     }
@@ -27,7 +29,7 @@ class CategoryService
         if($subcategories = $this->em->getRepository(Category::class)->findBy(['parent' => $parentId])){
             return $this->toArray($subcategories);
         }else{
-            throw new NotFoundHttpException('Parent category not found');
+            throw new NotFoundHttpException($this->translator->trans('error.category.not-found', [], 'error'));
         }
     }
 
@@ -38,7 +40,7 @@ class CategoryService
                 ($this->getCategoryAttributesService)($category->getOlxId())
             );
         }else{
-            throw new NotFoundHttpException('Category not found');
+            throw new NotFoundHttpException($this->translator->trans('error.category.attributes-not-found', [], 'error'));
         }
 
     }

@@ -32,6 +32,9 @@ class Integration
     #[ORM\OneToMany(targetEntity: WorkerIntegration::class, mappedBy: 'integration')]
     private Collection $workerIntegrations;
 
+    #[ORM\Column(length: 2)]
+    private ?string $localeCode = null;
+
     public function __construct()
     {
         $this->workerIntegrations = new ArrayCollection();
@@ -116,6 +119,18 @@ class Integration
                 $workerIntegration->setIntegration(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getLocaleCode(): ?string
+    {
+        return $this->localeCode;
+    }
+
+    public function setLocaleCode(string $localeCode): static
+    {
+        $this->localeCode = $localeCode;
 
         return $this;
     }

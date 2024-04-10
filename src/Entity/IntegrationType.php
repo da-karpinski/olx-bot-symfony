@@ -27,6 +27,9 @@ class IntegrationType
     #[ORM\OneToMany(targetEntity: Integration::class, mappedBy: 'integrationType', orphanRemoval: true)]
     private Collection $integrations;
 
+    #[ORM\Column]
+    private array $locales = [];
+
     public function __construct()
     {
         $this->integrations = new ArrayCollection();
@@ -99,6 +102,18 @@ class IntegrationType
                 $integration->setIntegrationType(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getLocales(): array
+    {
+        return $this->locales;
+    }
+
+    public function setLocales(array $locales): static
+    {
+        $this->locales = $locales;
 
         return $this;
     }

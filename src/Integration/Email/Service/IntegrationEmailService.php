@@ -13,6 +13,7 @@ use Monolog\Level;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
 
 class IntegrationEmailService implements IntegrationInterface
@@ -27,7 +28,8 @@ class IntegrationEmailService implements IntegrationInterface
         private readonly string $mailerSendFrom,
         private readonly EntityManagerInterface $em,
         private readonly MailerInterface $mailer,
-        private readonly LoggerInterface $integrationLogger
+        private readonly LoggerInterface $integrationLogger,
+        private readonly TranslatorInterface $translator,
     )
     {
     }
@@ -40,7 +42,10 @@ class IntegrationEmailService implements IntegrationInterface
         $notification->setIntegration($integration);
         $notification->setCreatedAt(new \DateTimeImmutable());
         $notification->setOffer($offers[0]);
-        $notification->setTitle('New offers found by OLX Bot!');
+
+        $this->translator->setLocale($integration->getLocaleCode());
+
+        $notification->setTitle($this->translator->trans('notification.title', [], 'integration-email-message'));
 
         $notification->setMessage($this->twig->render('@Integration/Email/Template/email-notification.html.twig', [
             'user' => $worker->getUser(),

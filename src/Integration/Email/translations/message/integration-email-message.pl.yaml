@@ -12,3 +12,6 @@ email:
     legal:
       cause: 'Otrzymałeś ten e-mail, ponieważ masz aktywnego pracownika na swoim koncie OLX Bot. Jeśli nie jesteś już zainteresowany, możesz wyłączyć bota w ustawieniach <a href="{{ dashboardUrl }}" style="color: #0d6efd;">konta</a>.'
       contact: 'Wiadomość została wysłana automatycznie z adresu, który nie przyjmuje wiadomości. Jeśli masz pytania, napisz do nas na <a href="mailto:{{ contactEmail }}" style="color: #0d6efd;">{{ contactEmail }}</a>.'
+
+notification:
+  title: 'Nowe oferty znalezione przez OLX Bot!'

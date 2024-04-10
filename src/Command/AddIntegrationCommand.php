@@ -38,11 +38,15 @@ class AddIntegrationCommand extends Command
 
         $integrationTypeName = $io->ask('Integration Name');
         $enabled = $io->choice('Enable this integration after creation?', ['yes', 'no'], 'yes') === 'yes';
+        $locales = $io->ask('Enter supported locales (comma separated)', 'en,pl');
+
+        $locales = explode(',', $locales);
 
         $integrationType = new IntegrationType();
         $integrationType->setIntegrationCode($integrationTypeCode)
             ->setName($integrationTypeName)
-            ->setEnabled($enabled);
+            ->setEnabled($enabled)
+            ->setLocales($locales);
 
         $this->em->persist($integrationType);
         $this->em->flush();

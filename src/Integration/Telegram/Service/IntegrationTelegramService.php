@@ -29,6 +29,8 @@ class IntegrationTelegramService implements IntegrationInterface
         #[Autowire(env: 'TELEGRAM_BOT_API_URL')]
         private readonly string $apiUrl,
         private readonly LoggerInterface $integrationLogger
+        private readonly LoggerInterface $integrationLogger,
+        private readonly TranslatorInterface $translator,
     )
     {
     }
@@ -36,6 +38,8 @@ class IntegrationTelegramService implements IntegrationInterface
     public function prepareNotifications(array $offers, Worker $worker, Integration $integration): Notification|array
     {
         $notifications = [];
+
+        $this->translator->setLocale($integration->getLocaleCode());
 
         /** @var Offer $offer */
         foreach ($offers as $offer) {

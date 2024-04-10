@@ -12,3 +12,6 @@ email:
     legal:
       cause: 'You received this email because you have active worker on your OLX Bot account. If you are not interested anymore, you can disable the worker on your <a href="{{ dashboardUrl }}" style="color: #0d6efd;">account settings</a>.'
       contact: "Message was sent automatically from address that can't receive replies. If you have any questions, please contact us at <a href=\"mailto:{{ contactEmail }}\" style=\"color: #0d6efd;\">{{ contactEmail }}</a>."
+
+notification:
+  title: 'New offers found by OLX Bot!'

@@ -11,6 +11,7 @@ use Monolog\Level;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class TelegramApiWebhookService
 {
@@ -24,6 +25,7 @@ class TelegramApiWebhookService
         private readonly LoggerInterface $integrationLogger,
         private readonly EntityManagerInterface $entityManager,
         private readonly HttpClient $apiClient,
+        private readonly TranslatorInterface $translator
     )
     {
     }
@@ -42,13 +44,16 @@ class TelegramApiWebhookService
             throw new IntegrationException('[Telegram Webhook]: Empty update.', Level::Error, $this->integrationLogger);
         }
 
+        $this->translator->setLocale($update['from']['language_code'] ?? 'en');
+        $this->translator->setLocale('pl');
+
         if(!empty($update['entities'])){
             $command = substr($update['text'], $update['entities'][0]['offset'], $update['entities'][0]['length']);
 
             $telegramIntegration = $this->entityManager->getRepository(TelegramIntegration::class)->findOneBy(['chatId' => $update['chat']['id']]);
 
             if($telegramIntegration?->getOtp()){
-                $message = 'Hold on! You are not completely integrated yet. First, please enter the OTP code "' . $telegramIntegration->getOtp() . '" in your integration settings. When you are done, I will send you a confirmation message here.';
+                $message = $this->translator->trans('webhook.handle-update.not-fully-configured', ['{{ otpCode }}' => $telegramIntegration->getOtp()], 'integration-telegram-message');
                 $this->sendMessage(['chat_id' => $update['chat']['id'], 'text' => $message]);
                 return;
             }
@@ -66,12 +71,12 @@ class TelegramApiWebhookService
     {
         if($telegramIntegration){
             if($telegramIntegration->isActive()){
-                $message = 'Hold on! Your account is already linked and active. If you want to disable notifications, use /disable command.';
-                $this->sendMessage(['chat_id' => $update['chat']['id'], 'text' => $message]);
+                $message = $this->translator->trans('webhook.create-user.linked-enabled', [], 'integration-telegram-message');
             }else{
-                $message = 'Hold on! Your account is already linked, but not active. If you want to enable notifications, use /enable command.';
-                $this->sendMessage(['chat_id' => $update['chat']['id'], 'text' => $message]);
+                $message = $this->translator->trans('webhook.create-user.linked-disabled', [], 'integration-telegram-message');
             }
+
+            $this->sendMessage(['chat_id' => $update['chat']['id'], 'text' => $message]);
         }
 
         if(!$telegramIntegration){
@@ -84,7 +89,7 @@ class TelegramApiWebhookService
             $this->entityManager->persist($telegramIntegration);
             $this->entityManager->flush();
 
-            $message = 'Hi, nice to meet you! To complete the integration, please enter the OTP code: "' . $telegramIntegration->getOtp() . '". When you are done, I will send you a confirmation message here.';
+            $message = $this->translator->trans('webhook.create-user.send-otp', ['{{ otpCode }}' => $telegramIntegration->getOtp()], 'integration-telegram-message');
             $this->sendMessage(['chat_id' => $update['chat']['id'], 'text' => $message]);
         }
     }
@@ -97,12 +102,11 @@ class TelegramApiWebhookService
                 $this->entityManager->persist($telegramIntegration);
                 $this->entityManager->flush();
 
-                $message = 'Notifications enabled successfully. You will receive notifications from now on. If you want to disable notifications, use /disable command.';
-                $this->sendMessage(['chat_id' => $update['chat']['id'], 'text' => $message]);
+                $message = $this->translator->trans('webhook.enable-user.enabled', [], 'integration-telegram-message');
             }else{
-                $message = 'Notifications are still enabled. You will continue to receive notifications, stay tuned!';
-                $this->sendMessage(['chat_id' => $update['chat']['id'], 'text' => $message]);
+                $message = $this->translator->trans('webhook.enable-user.already-enabled', [], 'integration-telegram-message');
             }
+            $this->sendMessage(['chat_id' => $update['chat']['id'], 'text' => $message]);
         }
     }
 
@@ -115,19 +119,18 @@ class TelegramApiWebhookService
                 $this->entityManager->persist($telegramIntegration);
                 $this->entityManager->flush();
 
-                $message = 'Notifications disabled successfully. You will not receive notifications from now on. If you want to enable notifications, use /enable command.';
-                $this->sendMessage(['chat_id' => $update['chat']['id'], 'text' => $message]);
+                $message = $this->translator->trans('webhook.disable-user.disabled', [], 'integration-telegram-message');
             }else{
-                $message = 'Notifications are already disabled. You will not receive notifications, but you can enable them anytime using /enable command.';
-                $this->sendMessage(['chat_id' => $update['chat']['id'], 'text' => $message]);
+                $message = $this->translator->trans('webhook.disable-user.already-disabled', [], 'integration-telegram-message');
             }
+            $this->sendMessage(['chat_id' => $update['chat']['id'], 'text' => $message]);
         }
     }
 
     private function handleUnsupportedCommand(array $update): void
     {
         $this->integrationLogger->warning(sprintf('Unsupported command: %s. Request message: %s', $update['text'], json_encode($update)));
-        $message = "Hmm, I don't understand this command. Please use: \n /start to link your account; \n /enable to enable notifications; \n /disable to disable notifications.";
+        $message = $this->translator->trans('webhook.unknown-command', [], 'integration-telegram-message');
         $this->sendMessage(['chat_id' => $update['chat']['id'], 'text' => $message]);
     }
 

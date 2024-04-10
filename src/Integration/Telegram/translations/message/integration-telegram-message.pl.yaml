@@ -1,0 +1,18 @@
+webhook:
+  handle-update:
+    not-fully-configured: 'Poczekaj! Integracja nie jest jeszcze w pełni skonfigurowana. Najpierw wprowadź kod OTP "{{ otpCode }}" w ustawieniach integracji. Gdy skończysz, wyślę Ci tutaj wiadomość potwierdzającą.'
+
+  create-user:
+    linked-enabled: 'Poczekaj! Twoje konto jest już połączone i powiadomienia są włączone. Jeśli chcesz wyłączyć powiadomienia, użyj polecenia /disable.'
+    linked-disabled: 'Poczekaj! Twoje konto jest już połączone, ale masz wyłączone powiadomienia. Jeśli chcesz włączyć powiadomienia, użyj polecenia /enable.'
+    send-otp: 'Cześć, miło mi Cię poznać! Aby zakończyć integrację, wprowadź kod OTP: "{{ otpCode }}". Gdy skończysz, wyślę Ci tutaj wiadomość potwierdzającą.'
+
+  enable-user:
+    already-enabled: 'Powiadomienia są cały czas włączone. Będziesz nadal otrzymywać powiadomienia, do zobaczenia!'
+    enabled: 'Powiadomienia zostały włączone. Jeśli chcesz wyłączyć powiadomienia, użyj polecenia /disable.'
+
+  disable-user:
+    already-disabled: 'Powiadomienia zostały już wyłączone. Nie będziesz otrzymywać powiadomień, ale możesz je włączyć w dowolnym momencie, używając polecenia /enable.'
+    disabled: 'Powiadomienia zostały wyłączone. Nie będziesz już otrzymywać więcej powiadomień, ale możesz je włączyć w dowolnym momencie, używając polecenia /enable.'
+
+  unknown-command: "Hmm, nie rozumiem tego polecenia. Użyj: \n /start, aby połączyć swoje konto; \n /enable, aby włączyć powiadomienia; \n /disable, aby wyłączyć powiadomienia."

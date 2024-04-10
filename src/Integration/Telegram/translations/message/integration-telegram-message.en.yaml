@@ -1,0 +1,18 @@
+webhook:
+  handle-update:
+    not-fully-configured: 'Hold on! You are not completely integrated yet. First, please enter the OTP code "{{ otpCode }}" in your integration settings. When you are done, I will send you a confirmation message here.'
+
+  create-user:
+    linked-enabled: 'Hold on! Your account is already linked and active. If you want to disable notifications, use /disable command.'
+    linked-disabled: 'Hold on! Your account is already linked, but not active. If you want to enable notifications, use /enable command.'
+    send-otp: 'Hi, nice to meet you! To complete the integration, please enter the OTP code: "{{ otpCode }}". When you are done, I will send you a confirmation message here.'
+
+  enable-user:
+    already-enabled: 'Notifications are still enabled. You will continue to receive notifications, stay tuned!'
+    enabled: 'Notifications enabled successfully. You will receive notifications from now on. If you want to disable notifications, use /disable command.'
+
+  disable-user:
+    already-disabled: 'Notifications are already disabled. You will not receive notifications, but you can enable them anytime using /enable command.'
+    disabled: 'Notifications disabled successfully. You will not receive notifications from now on. If you want to enable notifications, use /enable command.'
+
+  unknown-command: "Hmm, I don't understand this command. Please use: \n /start to link your account; \n /enable to enable notifications; \n /disable to disable notifications."

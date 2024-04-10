@@ -16,3 +16,12 @@ webhook:
     disabled: 'Notifications disabled successfully. You will not receive notifications from now on. If you want to enable notifications, use /enable command.'
 
   unknown-command: "Hmm, I don't understand this command. Please use: \n /start to link your account; \n /enable to enable notifications; \n /disable to disable notifications."
+
+notification:
+  message:
+    title: 'New offer found!'
+    offer:
+      title: 'Title'
+      description: 'Description'
+      price: 'Price'
+      link: 'Link'

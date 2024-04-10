@@ -16,3 +16,12 @@ webhook:
     disabled: 'Powiadomienia zostały wyłączone. Nie będziesz już otrzymywać więcej powiadomień, ale możesz je włączyć w dowolnym momencie, używając polecenia /enable.'
 
   unknown-command: "Hmm, nie rozumiem tego polecenia. Użyj: \n /start, aby połączyć swoje konto; \n /enable, aby włączyć powiadomienia; \n /disable, aby wyłączyć powiadomienia."
+
+notification:
+  message:
+    title: 'Znaleziono nową ofertę!'
+    offer:
+      title: 'Tytuł'
+      description: 'Opis'
+      price: 'Cena'
+      link: 'Link'

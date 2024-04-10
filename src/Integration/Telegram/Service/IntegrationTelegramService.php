@@ -8,6 +8,7 @@ use App\Entity\Offer;
 use App\Entity\Worker;
 use App\Exception\IntegrationException;
 use App\Integration\IntegrationInterface;
+use App\Integration\Telegram\Adapter\OfferToNotificationMessageAdapter;
 use App\Integration\Telegram\Entity\TelegramIntegration;
 use App\Integration\Telegram\HttpClient;
 use App\Integration\Telegram\Model\TelegramApi;
@@ -15,6 +16,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Monolog\Level;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class IntegrationTelegramService implements IntegrationInterface
 {
@@ -28,7 +30,6 @@ class IntegrationTelegramService implements IntegrationInterface
         private readonly string $botToken,
         #[Autowire(env: 'TELEGRAM_BOT_API_URL')]
         private readonly string $apiUrl,
-        private readonly LoggerInterface $integrationLogger
         private readonly LoggerInterface $integrationLogger,
         private readonly TranslatorInterface $translator,
     )
@@ -48,14 +49,7 @@ class IntegrationTelegramService implements IntegrationInterface
             $notification->setIntegration($integration);
             $notification->setCreatedAt(new \DateTimeImmutable());
             $notification->setOffer($offer);
-            $notification->setMessage(sprintf(
-                "New offer found by OLX Bot!\nTitle: %s\nDescription: %s\nPrice: %s %s\nLink: %s",
-                $offer->getTitle(),
-                strip_tags($offer->getDescription()),
-                $offer->getPrice(),
-                $offer->getPriceCurrency(),
-                $offer->getUrl()
-            ));
+            $notification->setMessage(OfferToNotificationMessageAdapter::adapt($offer, $this->translator));
 
             $notifications[] = $notification;
         }
@@ -76,7 +70,8 @@ class IntegrationTelegramService implements IntegrationInterface
 
         $payload = [
             'chat_id' => $config->getChatId(),
-            'text' => $notification->getMessage()
+            'parse_mode' => 'HTML',
+            'text' => $notification->getMessage(),
         ];
 
         $model = TelegramApi::sendMessage;

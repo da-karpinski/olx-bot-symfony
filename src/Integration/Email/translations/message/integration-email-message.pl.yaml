@@ -1,0 +1,14 @@
+email:
+  intro:
+    welcome: 'Cześć'
+    content: 'Znalazłem dla Ciebie nowe oferty, które mogą Cię zainteresować. Sprawdź oferty poniżej i kliknij na zdjęcie, aby zobaczyć ofertę na stronie OLX.<br/>Oferty są również zapisane w Twoim koncie, więc możesz je zobaczyć lub sprawdzić ich szczegóły później w moim <a href="{{ dashboardUrl }}" style="color: #0d6efd;">Panelu</a> (nawet jeśli oferta nie jest już dostępna na stronie OLX!).'
+  card:
+    title: 'Nowe oferty dla Ciebie'
+    description: 'Kliknięcie na zdjęcie przekieruje Cię do oferty na stronie OLX.'
+    price-label: 'Cena:'
+    footer:
+      content: "To wszystko, co mam dla Ciebie na ten moment, ale spokojnie, nadal będę szukać nowych ofert i powiadomię Cię, gdy znajdę coś interesującego! 🕵️‍"
+      farewell: 'Do zobaczenia wkrótce! 👋'
+    legal:
+      cause: 'Otrzymałeś ten e-mail, ponieważ masz aktywnego pracownika na swoim koncie OLX Bot. Jeśli nie jesteś już zainteresowany, możesz wyłączyć bota w ustawieniach <a href="{{ dashboardUrl }}" style="color: #0d6efd;">konta</a>.'
+      contact: 'Wiadomość została wysłana automatycznie z adresu, który nie przyjmuje wiadomości. Jeśli masz pytania, napisz do nas na <a href="mailto:{{ contactEmail }}" style="color: #0d6efd;">{{ contactEmail }}</a>.'

@@ -1,0 +1,14 @@
+email:
+  intro:
+    welcome: 'Hello,'
+    content: 'I have found new offers for you, that you might be interested in. Look at the offers below and click on the image to view the offer on OLX website.<br/>I am also saved the offers in your account, so you can view them or check their details later in my <a href="{{ dashboardUrl }}" style="color: #0d6efd;">Dashboard</a> (even when offer is no longer available on OLX website!).'
+  card:
+    title: 'New offers for you'
+    description: 'Clicking on the image will redirect you to the offer on OLX website.'
+    price-label: 'Price:'
+    footer:
+      content: "That's all what I have for you right now, but don't worry! I will keep looking for new offers and I will notify you when I find something interesting. 🕵️‍"
+      farewell: 'See you soon! 👋'
+    legal:
+      cause: 'You received this email because you have active worker on your OLX Bot account. If you are not interested anymore, you can disable the worker on your <a href="{{ dashboardUrl }}" style="color: #0d6efd;">account settings</a>.'
+      contact: "Message was sent automatically from address that can't receive replies. If you have any questions, please contact us at <a href=\"mailto:{{ contactEmail }}\" style=\"color: #0d6efd;\">{{ contactEmail }}</a>."

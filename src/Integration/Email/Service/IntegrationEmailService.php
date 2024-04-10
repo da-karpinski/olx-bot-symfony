@@ -42,7 +42,7 @@ class IntegrationEmailService implements IntegrationInterface
         $notification->setOffer($offers[0]);
         $notification->setTitle('New offers found by OLX Bot!');
 
-        $notification->setMessage($this->twig->render('@Integration/Email/Template/email-notification-en.html.twig', [
+        $notification->setMessage($this->twig->render('@Integration/Email/Template/email-notification.html.twig', [
             'user' => $worker->getUser(),
             'dashboardUrl' => $this->dashboardUrl,
             'offers' => $offers,

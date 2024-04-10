@@ -49,7 +49,7 @@
                                     </table>
                                     <div class="space-y-4">
                                         <h1 class="text-4xl fw-800" style="padding-top: 0; padding-bottom: 0; font-weight: 800 !important; vertical-align: baseline; font-size: 36px; line-height: 43.2px; margin: 0;" align="left">
-                                            Hello, {{ user.getName() }}! 👋
+                                            {{ 'email.intro.welcome'|trans([], "integration-email-message")|raw }} {{ user.getName() }}! 👋
                                         </h1>
                                         <table class="s-4 w-full" role="presentation" border="0" cellpadding="0" cellspacing="0" style="width: 100%;" width="100%">
                                             <tbody>
@@ -61,8 +61,7 @@
                                             </tbody>
                                         </table>
                                         <p class="" style="line-height: 24px; font-size: 16px; width: 100%; margin: 0;" align="left">
-                                            I have found new offers for you, that you might be interested in. Look at the offers below and click on the image to view the offer on OLX website.<br/>
-                                            I am also saved the offers in your account, so you can view them or check their details later in my <a href="{{ dashboardUrl }}" style="color: #0d6efd;">Dashboard</a>. (even when offer is no longer available on OLX website!)
+                                            {{ 'email.intro.content'|trans({'{{ dashboardUrl }}': dashboardUrl}, "integration-email-message")|raw }}
                                         </p>
                                         <table class="s-4 w-full" role="presentation" border="0" cellpadding="0" cellspacing="0" style="width: 100%;" width="100%">
                                             <tbody>
@@ -88,10 +87,10 @@
                                         <tr>
                                             <td style="line-height: 24px; font-size: 16px; width: 100%; border-radius: 24px; margin: 0; padding: 40px;" align="left" bgcolor="#ffffff">
                                                 <h2 class="text-center" style="padding-top: 0; padding-bottom: 0; font-weight: 500; vertical-align: baseline; font-size: 28px; line-height: 33.6px; margin: 0;" align="center">
-                                                    New offers for you
+                                                    {{ 'email.card.title'|trans([], "integration-email-message")|raw }}
                                                 </h2>
                                                 <p class="text-center text-muted" style="line-height: 24px; font-size: 16px; color: #718096; width: 100%; margin: 0;" align="center">
-                                                    Clicking on the image will redirect you to the offer on OLX website.
+                                                    {{ 'email.card.description'|trans([], "integration-email-message")|raw }}
                                                 </p>
                                                 <table class="p-2 w-full" border="0" cellpadding="0" cellspacing="0" style="width: 100%;" width="100%">
                                                     <tbody>
@@ -104,7 +103,7 @@
                                                             <h3>{{ offer.getTitle() }}</h3>
                                                             <p style="line-height: 0; font-size: 12px; color: #aaaaaa">#{{ offer.getOlxId() }}</p>
                                                             <p>{{ offer.getDescription()|striptags|u.truncate(160, '...', false) }}</p>
-                                                            <p>Price: {{ offer.getPrice() }} {{ offer.getPriceCurrency() }}</p>
+                                                            <p>{{ 'email.card.price-label'|trans([], "integration-email-message")|raw }} {{ offer.getPrice() }} {{ offer.getPriceCurrency() }}</p>
                                                         </td>
                                                         <td class="text-right" style="line-height: 24px; font-size: 16px; width: 100%; margin: 0; padding: 8px;" align="right" width="100%">
                                                             {# TODO: Add link to offer + proper image #}
@@ -144,8 +143,9 @@
                                                     </tbody>
                                                 </table>
                                                 <p style="line-height: 24px; font-size: 16px; width: 100%; margin: 0;" align="left">
-                                                    That's all what I have for you right now, but don't worry! I will keep looking for new offers and I will notify you when I find something interesting. 🕵️‍♂️<br/><br/>
-                                                    See you soon! 👋
+                                                    {{ 'email.card.footer.content'|trans([], "integration-email-message")|raw }}
+                                                    <br/><br/>
+                                                    {{ 'email.card.footer.farewell'|trans([], "integration-email-message")|raw }}
                                                 </p>
                                                 <table class="s-6 w-full" role="presentation" border="0" cellpadding="0" cellspacing="0" style="width: 100%;" width="100%">
                                                     <tbody>
@@ -167,12 +167,12 @@
 
                                                 <p style="color: #cccccc">
                                                     <small>
-                                                        You received this email because you have active worker on your OLX Bot account. If you are not interested anymore, you can disable the worker on your <a href="{{ dashboardUrl }}" style="color: #0d6efd;">account settings</a>.
+                                                        {{ 'email.card.legal.cause'|trans({'{{ dashboardUrl }}': dashboardUrl}, "integration-email-message")|raw }}
                                                     </small>
                                                 </p>
                                                 <p style="color: #cccccc">
                                                     <small>
-                                                        Message was sent automatically from address that can't receive replies. If you have any questions, please contact us at <a href="mailto:{{ contactEmail }}" style="color: #0d6efd;">{{ contactEmail }}</a>
+                                                        {{ 'email.card.legal.contact'|trans({'{{ contactEmail }}': contactEmail}, "integration-email-message")|raw }}
                                                     </small>
                                                 </p>
                                             </td>

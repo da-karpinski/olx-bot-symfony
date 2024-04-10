@@ -45,7 +45,6 @@ class TelegramApiWebhookService
         }
 
         $this->translator->setLocale($update['from']['language_code'] ?? 'en');
-        $this->translator->setLocale('pl');
 
         if(!empty($update['entities'])){
             $command = substr($update['text'], $update['entities'][0]['offset'], $update['entities'][0]['length']);

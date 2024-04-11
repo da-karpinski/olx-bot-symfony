@@ -9,3 +9,7 @@ integrations:
         path: ../src/Integration/
         namespace: App\Integration
     type: attribute
+
+auth:
+    path: /api/auth
+    methods: ['POST']

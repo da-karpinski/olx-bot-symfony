@@ -1,0 +1,14 @@
+entity:
+  does-not-exist: "The entity does not exist."
+  not-callable: "The entity is not callable."
+
+user:
+  password:
+    policy: "The password does not meet the password policy requirements: {{ requirements }}."
+    not-the-same: "Your passwords do not match."
+    too-short: "Password is too short (minimum %s characters)"
+    too-long: "Password is too long (maximum %s characters)"
+    rule:
+      digit: "The password must contain at least one digit"
+      uppercase: "The password must contain at least one uppercase letter"
+      special-character: "The password must contain at least one special character"

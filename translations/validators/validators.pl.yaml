@@ -1,0 +1,14 @@
+entity:
+  does-not-exist: "Ta wartość nie istnieje."
+  not-callable: 'Klasa do której się odwołujesz nie istnieje lub nie jest dostępna.'
+
+user:
+  password:
+    policy: "Hasło nie spełnia wymagań polityki haseł: {{ requirements }}."
+    not-the-same: "Hasła nie są takie same."
+    too-short: "Hasło jest za krótkie (minimalnie %s znaków)"
+    too-long: "Hasło jest za długie (maksymalnie %s znaków)"
+    rule:
+      digit: "Hasło musi zawierać przynajmniej jedną cyfrę"
+      uppercase: "Hasło musi zawierać przynajmniej jedną wielką literę"
+      special-character: "Hasło musi zawierać przynajmniej jeden znak specjalny"

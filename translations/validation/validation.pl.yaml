@@ -1,3 +1,0 @@
-entity:
-  does-not-exist: "Ta wartość nie istnieje."
-  not-callable: 'Klasa do której się odwołujesz nie istnieje lub nie jest dostępna.'

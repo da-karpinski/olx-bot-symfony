@@ -1,8 +1,10 @@
 entity:
   does-not-exist: "The entity does not exist."
+  already-exists: "The entity already exists."
   not-callable: "The entity is not callable."
 
 user:
+  already-exists: "The use with this email already exists."
   password:
     policy: "The password does not meet the password policy requirements: {{ requirements }}."
     not-the-same: "Your passwords do not match."
@@ -12,3 +14,5 @@ user:
       digit: "The password must contain at least one digit"
       uppercase: "The password must contain at least one uppercase letter"
       special-character: "The password must contain at least one special character"
+  role:
+    not-found: "The role does not exist"

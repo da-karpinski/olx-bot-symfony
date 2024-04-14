@@ -46,7 +46,13 @@ class EntityExistsValidator extends ConstraintValidator
             return;
         }
 
-        if (!$entity instanceof $constraint->entityClass) {
+        if($entity instanceof $constraint->entityClass and !$constraint->shouldExist) {
+            $this->context
+                ->buildViolation($constraint->message)
+                ->addViolation();
+        }
+
+        if(!$entity instanceof $constraint->entityClass and $constraint->shouldExist) {
             $this->context
                 ->buildViolation($constraint->message)
                 ->addViolation();

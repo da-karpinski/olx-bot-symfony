@@ -6,6 +6,7 @@ use App\Repository\IntegrationRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: IntegrationRepository::class)]
 class Integration
@@ -13,9 +14,11 @@ class Integration
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['user:view'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 100)]
+    #[Groups(['user:view'])]
     private ?string $name = null;
 
     #[ORM\ManyToOne(inversedBy: 'integrations')]
@@ -24,9 +27,11 @@ class Integration
 
     #[ORM\ManyToOne(inversedBy: 'integrations')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['user:view'])]
     private ?IntegrationType $integrationType = null;
 
     #[ORM\Column]
+    #[Groups(['user:list', 'user:view'])]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\OneToMany(targetEntity: WorkerIntegration::class, mappedBy: 'integration')]

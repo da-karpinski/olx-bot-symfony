@@ -14,25 +14,23 @@ class Worker
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['user:view'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'workers')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['worker:write'])]
     private ?User $user = null;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['worker:write'])]
     private ?City $city = null;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['worker:write'])]
     private ?Category $category = null;
 
     #[ORM\Column]
-    #[Groups(['worker:write'])]
+    #[Groups(['user:view'])]
     private ?bool $enabled = null;
 
     #[ORM\Column]
@@ -42,11 +40,9 @@ class Worker
     private ?\DateTimeImmutable $lastExecutedAt = null;
 
     #[ORM\Column]
-    #[Groups(['worker:write'])]
     private ?int $executionInterval = null;
 
     #[ORM\OneToMany(targetEntity: CategoryAttribute::class, mappedBy: 'worker', orphanRemoval: true)]
-    #[Groups(['worker:write'])]
     private Collection $categoryAttributes;
 
     #[ORM\OneToMany(targetEntity: Offer::class, mappedBy: 'worker', orphanRemoval: true)]
@@ -57,6 +53,10 @@ class Worker
 
     #[ORM\OneToMany(targetEntity: Notification::class, mappedBy: 'worker')]
     private Collection $notifications;
+
+    #[ORM\Column(length: 100)]
+    #[Groups(['user:view'])]
+    private ?string $name = null;
 
     public function __construct()
     {
@@ -271,6 +271,18 @@ class Worker
                 $notification->setWorker(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): static
+    {
+        $this->name = $name;
 
         return $this;
     }

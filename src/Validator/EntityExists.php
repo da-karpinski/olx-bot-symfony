@@ -13,7 +13,12 @@ class EntityExists extends Constraint
     public $mode = 'strict';
 
     /**
-     * @var ?string $identifier Product indentifier
+     * @var ?bool $shouldExist raise error if entity does not exist; default is true
+     */
+    public ?bool $shouldExist;
+
+    /**
+     * @var ?string $identifier Product identifier
      */
     public ?string $identifier;
 
@@ -23,11 +28,17 @@ class EntityExists extends Constraint
     public ?string $entityClass;
 
     #[HasNamedArguments]
-    public function __construct(?string $identifier, ?string $entityClass, ?array $skippable =[], array $groups = null, mixed $payload = null)
+    public function __construct(?string $identifier, ?string $entityClass, ?bool $shouldExist = true, array $groups = null, mixed $payload = null)
     {
+
+        if(!$shouldExist){
+            $this->message = 'entity.already-exists';
+        }
+
         parent::__construct([], $groups, $payload);
         $this->identifier = $identifier;
         $this->entityClass = $entityClass;
+        $this->shouldExist = $shouldExist;
     }
 
     /**

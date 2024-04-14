@@ -1,8 +1,10 @@
 entity:
   does-not-exist: "Ta wartość nie istnieje."
+  already-exists: "Ta wartość już istnieje."
   not-callable: 'Klasa do której się odwołujesz nie istnieje lub nie jest dostępna.'
 
 user:
+  already-exists: "Użytkownik o podanym adresie e-mail już istnieje."
   password:
     policy: "Hasło nie spełnia wymagań polityki haseł: {{ requirements }}."
     not-the-same: "Hasła nie są takie same."
@@ -12,3 +14,5 @@ user:
       digit: "Hasło musi zawierać przynajmniej jedną cyfrę"
       uppercase: "Hasło musi zawierać przynajmniej jedną wielką literę"
       special-character: "Hasło musi zawierać przynajmniej jeden znak specjalny"
+  role:
+    not-found: "Podana rola nie istnieje"

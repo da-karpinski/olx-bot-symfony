@@ -2,7 +2,17 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Metadata\Post;
+use App\ApiResource\User\Dto\UserCreateInput;
+use App\ApiResource\User\Processor\UserCreateInputProcessor;
+use App\ApiResource\User\Provider\UserGetMeProvider;
 use App\Repository\UserRepository;
+use App\Security\Voter\UserVoter;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -12,38 +22,93 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
+#[ApiResource(
+    operations: [
+        new Get(
+            uriTemplate: '/user/me',
+            normalizationContext: ['groups' => ['user:view']],
+            security: 'is_granted("'.self::ROLE_ADMIN.'") or is_granted("'.self::ROLE_USER.'")',
+            provider: UserGetMeProvider::class,
+        ),
+        new Get(
+            uriTemplate: '/user/{id}',
+            normalizationContext: ['groups' => ['user:view']],
+            security: 'is_granted("'.UserVoter::USER_GET.'", object)',
+        ),
+        new GetCollection(
+            uriTemplate: '/user',
+            paginationEnabled: true,
+            paginationItemsPerPage: 12,
+            normalizationContext: ['groups' => ['user:list']],
+            security: 'is_granted("'.self::ROLE_ADMIN.'")',
+        ),
+        new Patch(
+            uriTemplate: '/user/{id}',
+            normalizationContext: ['groups' => ['user:view']],
+            denormalizationContext: ['groups' => ['user:write']],
+            security: 'is_granted("'.UserVoter::USER_EDIT.'", object)',
+        ),
+        new Post(
+            uriTemplate: '/user',
+            normalizationContext: ['groups' => ['user:view']],
+            denormalizationContext: ['groups' => ['user:write']],
+            securityPostDenormalize: 'is_granted("'.UserVoter::USER_CREATE.'",object)',
+            input: UserCreateInput::class,
+            processor: UserCreateInputProcessor::class
+        ),
+        new Delete(
+            uriTemplate: '/user/{id}',
+            security: 'is_granted("'.UserVoter::USER_DELETE.'", object)',
+        )
+    ],
+    normalizationContext: ['groups' => ['user:list', 'user:view', 'user:write'], 'enable_max_depth' => true],
+    denormalizationContext: ['groups' => ['user:write']],
+    paginationClientEnabled: true,
+    paginationClientItemsPerPage: true,
+    paginationEnabled: true,
+    paginationItemsPerPage: 12
+)]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
+    const ROLE_ADMIN = 'ROLE_ADMIN';
+    const ROLE_USER = 'ROLE_USER';
+
+    const ROLES = [self::ROLE_ADMIN, self::ROLE_USER];
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['worker:write'])]
+    #[Groups(['user:list', 'user:view', 'user:write'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 180)]
-    #[Groups(['worker:write'])]
+    #[Groups(['user:list', 'user:view', 'user:write'])]
     private ?string $email = null;
 
     /**
      * @var list<string> The user roles
      */
     #[ORM\Column]
+    #[Groups(['user:list', 'user:view', 'user:write'])]
     private array $roles = [];
 
     /**
      * @var string The hashed password
      */
     #[ORM\Column]
+    #[Groups(['user:write'])]
     private ?string $password = null;
 
     #[ORM\Column(length: 100)]
-    #[Groups(['worker:write'])]
+    #[Groups(['user:list', 'user:view', 'user:write'])]
     private ?string $name = null;
 
     #[ORM\OneToMany(targetEntity: Worker::class, mappedBy: 'user', orphanRemoval: true)]
+    #[Groups(['user:view'])]
     private Collection $workers;
 
     #[ORM\OneToMany(targetEntity: Integration::class, mappedBy: 'user', orphanRemoval: true)]
+    #[Groups(['user:view'])]
     private Collection $integrations;
 
     public function __construct()
@@ -87,8 +152,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getRoles(): array
     {
         $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
 
         return array_unique($roles);
     }

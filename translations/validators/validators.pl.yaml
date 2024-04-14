@@ -1,3 +1,6 @@
+access:
+  denied: "Nie masz dostępu do tego zasobu."
+
 entity:
   does-not-exist: "Ta wartość nie istnieje."
   already-exists: "Ta wartość już istnieje."

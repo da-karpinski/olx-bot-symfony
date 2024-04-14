@@ -1,3 +1,6 @@
+access:
+  denied: "Access denied."
+
 entity:
   does-not-exist: "The entity does not exist."
   already-exists: "The entity already exists."

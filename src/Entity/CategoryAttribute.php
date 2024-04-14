@@ -2,17 +2,36 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use App\ApiResource\CategoryAttribute\Provider\GetCategoryAttributesForWorkerProvider;
 use App\Repository\CategoryAttributeRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: CategoryAttributeRepository::class)]
+#[ApiResource(
+    operations: [
+        new Get(
+            uriTemplate: '/category-attribute/{id}', //worker ID required
+            requirements: ['id' => '\d+'],
+            normalizationContext: ['groups' => ['category-attribute:list'], 'skip_null_values' => false],
+            security: 'is_granted("'.User::ROLE_ADMIN.'") or is_granted("'.User::ROLE_USER.'")',
+            provider: GetCategoryAttributesForWorkerProvider::class
+        ),
+    ],
+    normalizationContext: ['groups' => ['category-attribute:list', 'category-attribute:view'], 'enable_max_depth' => true],
+    paginationClientEnabled: true,
+    paginationClientItemsPerPage: true,
+    paginationEnabled: true,
+    paginationItemsPerPage: 12,
+)]
 class CategoryAttribute
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['worker:write'])]
+    #[Groups(['category-attribute:list'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'categoryAttributes', cascade: ['persist'])]
@@ -20,11 +39,11 @@ class CategoryAttribute
     private ?Worker $worker = null;
 
     #[ORM\Column(length: 60)]
-    #[Groups(['worker:write'])]
+    #[Groups(['category-attribute:list'])]
     private ?string $attributeCode = null;
 
     #[ORM\Column(length: 60)]
-    #[Groups(['worker:write'])]
+    #[Groups(['category-attribute:list'])]
     private ?string $attributeValue = null;
 
     public function getId(): ?int

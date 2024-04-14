@@ -8,6 +8,7 @@ use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
+use App\ApiResource\Category\Provider\CategoryGetAttributesProvider;
 use App\ApiResource\Category\Provider\CategoryGetSubcategoriesProvider;
 use App\Repository\CategoryRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -37,6 +38,14 @@ use Symfony\Component\Serializer\Annotation\Groups;
             normalizationContext: ['groups' => ['category:list']],
             security: 'is_granted("'.User::ROLE_ADMIN.'") or is_granted("'.User::ROLE_USER.'")',
             provider: CategoryGetSubcategoriesProvider::class,
+        ),
+        new Get(
+            uriTemplate: '/category/{id}/attributes',
+            requirements: ['id' => '\d+'],
+            paginationEnabled: false,
+            normalizationContext: ['groups' => ['category:view']],
+            security: 'is_granted("'.User::ROLE_ADMIN.'") or is_granted("'.User::ROLE_USER.'")',
+            provider: CategoryGetAttributesProvider::class,
         ),
     ],
     normalizationContext: ['groups' => ['category:list', 'category:view'], 'enable_max_depth' => true],

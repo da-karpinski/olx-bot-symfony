@@ -18,12 +18,14 @@ class CategoryService
     {
     }
 
+    // FIXME: replaced by ApiFilter in Category entity
     public function getMainCategories(): array
     {
         $mainCategories = $this->em->getRepository(Category::class)->findBy(['parent' => null]);
         return $this->toArray($mainCategories);
     }
 
+    // FIXME: moved to CategoryGetSubcategoriesProvider
     public function getSubcategories(int $parentId): array
     {
         if($subcategories = $this->em->getRepository(Category::class)->findBy(['parent' => $parentId])){
@@ -33,6 +35,7 @@ class CategoryService
         }
     }
 
+    // FIXME: moved to CategoryGetAttributesProvider
     public function getCategoryAttributes(int $categoryId): array
     {
         if($category = $this->em->getRepository(Category::class)->find($categoryId)){
@@ -45,6 +48,7 @@ class CategoryService
 
     }
 
+    // FIXME: moved to CategoryGetAttributesProvider
     public function addPriceAttribute(array $attributes): array
     {
         array_unshift($attributes, [

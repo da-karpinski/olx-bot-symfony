@@ -22,11 +22,6 @@ class UserUpdateInput
     #[PasswordIsStrong]
     public string $password;
 
-    #[Groups(['user:write'])]
-    #[ApiProperty(openapiContext: ['type' => 'string', 'example' => 'John123!'])]
-    #[Assert\EqualTo(propertyPath: 'password', options: ['message' => 'user.password.not-the-same'])]
-    public string $repeatPassword;
-
     #[Groups(['user:view', 'user:write'])]
     #[ApiProperty(openapiContext: ['type' => 'string', 'example' => 'John Doe'])]
     public string $name;

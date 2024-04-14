@@ -2,6 +2,13 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Orm\Filter\ExistsFilter;
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use App\ApiResource\Category\Provider\CategoryGetSubcategoriesProvider;
 use App\Repository\CategoryRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -9,22 +16,58 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: CategoryRepository::class)]
+#[ApiResource(
+    operations: [
+        new Get(
+            uriTemplate: '/category/{id}',
+            normalizationContext: ['groups' => ['category:view'], 'skip_null_values' => false],
+            security: 'is_granted("'.User::ROLE_ADMIN.'") or is_granted("'.User::ROLE_USER.'")',
+        ),
+        new GetCollection(
+            uriTemplate: '/category',
+            paginationEnabled: true,
+            paginationItemsPerPage: 12,
+            normalizationContext: ['groups' => ['category:list'], 'skip_null_values' => false],
+            security: 'is_granted("'.User::ROLE_ADMIN.'") or is_granted("'.User::ROLE_USER.'")',
+        ),
+        new GetCollection(
+            uriTemplate: '/category/{id}/subcategories',
+            requirements: ['id' => '\d+'],
+            paginationEnabled: false,
+            normalizationContext: ['groups' => ['category:list']],
+            security: 'is_granted("'.User::ROLE_ADMIN.'") or is_granted("'.User::ROLE_USER.'")',
+            provider: CategoryGetSubcategoriesProvider::class,
+        ),
+    ],
+    normalizationContext: ['groups' => ['category:list', 'category:view'], 'enable_max_depth' => true],
+    paginationClientEnabled: true,
+    paginationClientItemsPerPage: true,
+    paginationEnabled: true,
+    paginationItemsPerPage: 12,
+)]
+#[ApiFilter(SearchFilter::class, properties: [
+    'name' => SearchFilter::STRATEGY_PARTIAL,
+])]
+#[ApiFilter(ExistsFilter::class, properties: [
+    'parent'
+])]
 class Category
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['worker:write'])]
+    #[Groups(['category:view', 'category:list'])]
     private ?int $id = null;
 
     #[ORM\Column]
     private ?int $olxId = null;
 
     #[ORM\Column(length: 60)]
-    #[Groups(['worker:write'])]
+    #[Groups(['category:view', 'category:list'])]
     private ?string $name = null;
 
     #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'parentId')]
+    #[Groups(['category:view', 'category:list'])]
     private ?self $parent = null;
 
     #[ORM\OneToMany(targetEntity: self::class, mappedBy: 'category')]

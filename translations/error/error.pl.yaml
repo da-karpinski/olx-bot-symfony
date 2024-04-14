@@ -10,5 +10,8 @@ error:
     not-found: 'Nie znaleziono kategorii.'
     attributes-not-found: 'Nie znaleziono atrybutów dla tej kategorii.'
 
+  subcategory:
+    not-found: 'Ta kategoria nie posiada podkategorii.'
+
   worker:
     create-insufficient-permissions: 'Niewystarczające uprawnienia do utworzenia pracownika.'

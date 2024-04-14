@@ -10,5 +10,8 @@ error:
     not-found: 'Category not found.'
     attributes-not-found: 'Category attributes not found.'
 
+  subcategory:
+    not-found: 'This category does not have subcategories.'
+
   worker:
     create-insufficient-permissions: 'Insufficient permissions to create worker.'

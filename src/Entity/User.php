@@ -9,7 +9,9 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use App\ApiResource\User\Dto\UserCreateInput;
+use App\ApiResource\User\Dto\UserUpdateInput;
 use App\ApiResource\User\Processor\UserCreateInputProcessor;
+use App\ApiResource\User\Processor\UserUpdateInputProcessor;
 use App\ApiResource\User\Provider\UserGetMeProvider;
 use App\Repository\UserRepository;
 use App\Security\Voter\UserVoter;
@@ -47,6 +49,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
             normalizationContext: ['groups' => ['user:view']],
             denormalizationContext: ['groups' => ['user:write']],
             security: 'is_granted("'.UserVoter::USER_EDIT.'", object)',
+            input: UserUpdateInput::class,
+            processor: UserUpdateInputProcessor::class
         ),
         new Post(
             uriTemplate: '/user',

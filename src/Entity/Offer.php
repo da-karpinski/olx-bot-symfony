@@ -2,58 +2,118 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Orm\Filter\DateFilter;
+use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
 use App\Repository\OfferRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: OfferRepository::class)]
+#[ApiResource(
+    operations: [
+        new Get(
+            uriTemplate: '/offer/{id}',
+            normalizationContext: ['groups' => ['offer:view']],
+            security: 'is_granted("'.User::ROLE_ADMIN.'") or is_granted("'.User::ROLE_USER.'")',
+        ),
+        new GetCollection(
+            uriTemplate: '/offer',
+            paginationEnabled: true,
+            paginationItemsPerPage: 12,
+            normalizationContext: ['groups' => ['offer:list']],
+            security: 'is_granted("'.User::ROLE_ADMIN.'") or is_granted("'.User::ROLE_USER.'")',
+        )
+    ],
+    normalizationContext: ['groups' => ['offer:list', 'offer:view'], 'enable_max_depth' => true],
+    paginationClientEnabled: true,
+    paginationClientItemsPerPage: true,
+    paginationEnabled: true,
+    paginationItemsPerPage: 12
+)]
+#[ApiFilter(SearchFilter::class, properties: [
+    'title' => SearchFilter::STRATEGY_PARTIAL,
+    'olxId' => SearchFilter::STRATEGY_EXACT,
+    'worker.id' => SearchFilter::STRATEGY_EXACT,
+    'worker.name' => SearchFilter::STRATEGY_PARTIAL,
+])]
+#[ApiFilter(OrderFilter::class, properties: [
+    'createdAt',
+    'lastSeenAt',
+    'validTo',
+    'price',
+])]
+#[ApiFilter(DateFilter::class, properties: [
+    'createdAt',
+    'lastSeenAt',
+    'validTo',
+])]
 class Offer
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['offer:list', 'offer:view'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'offers')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['offer:list', 'offer:view'])]
     private ?Worker $worker = null;
 
     #[ORM\Column]
+    #[Groups(['offer:list', 'offer:view'])]
     private ?\DateTimeImmutable $lastSeenAt = null;
 
     #[ORM\Column]
+    #[Groups(['offer:list', 'offer:view'])]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(['offer:view'])]
     private ?string $description = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['offer:list', 'offer:view'])]
     private ?string $url = null;
 
     #[ORM\Column]
+    #[Groups(['offer:list', 'offer:view'])]
     private ?int $olxId = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['offer:view'])]
     private ?\DateTimeImmutable $refreshedAt = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['offer:list', 'offer:view'])]
     private ?string $title = null;
 
     #[ORM\Column]
+    #[Groups(['offer:list', 'offer:view'])]
     private ?\DateTimeImmutable $validTo = null;
 
     #[ORM\OneToMany(targetEntity: OfferPhoto::class, mappedBy: 'offer', orphanRemoval: true)]
+    #[Groups(['offer:list', 'offer:view'])]
     private Collection $offerPhotos;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['offer:list', 'offer:view'])]
     private ?int $price = null;
 
     #[ORM\Column(length: 3, nullable: true)]
+    #[Groups(['offer:list', 'offer:view'])]
     private ?string $priceCurrency = null;
 
     #[ORM\OneToMany(targetEntity: OfferParameter::class, mappedBy: 'offer', orphanRemoval: true)]
+    #[Groups(['offer:view'])]
     private Collection $offerParameters;
 
     public function __construct()

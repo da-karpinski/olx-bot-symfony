@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\OfferParameterRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: OfferParameterRepository::class)]
 class OfferParameter
@@ -11,6 +12,7 @@ class OfferParameter
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['offer:view'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'offerParameters')]
@@ -18,15 +20,19 @@ class OfferParameter
     private ?Offer $offer = null;
 
     #[ORM\Column(length: 60)]
+    #[Groups(['offer:view'])]
     private ?string $parameterKey = null;
 
     #[ORM\Column(length: 60)]
+    #[Groups(['offer:view'])]
     private ?string $parameterName = null;
 
     #[ORM\Column(length: 60)]
+    #[Groups(['offer:view'])]
     private ?string $valueKey = null;
 
     #[ORM\Column(length: 60)]
+    #[Groups(['offer:view'])]
     private ?string $valueLabel = null;
 
     public function getId(): ?int

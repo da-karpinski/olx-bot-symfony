@@ -25,29 +25,11 @@ class CategoryGetAttributesProvider implements ProviderInterface
     {
 
         if($category = $this->em->getRepository(Category::class)->find($uriVariables['id'])){
-            return $this->addPriceAttribute(
-                ($this->getCategoryAttributesService)($category->getOlxId())
-            );
+            return ($this->getCategoryAttributesService)($category->getOlxId());
+
         }else{
             throw new NotFoundHttpException($this->translator->trans('error.category.attributes-not-found', [], 'error'));
         }
-    }
-
-    private function addPriceAttribute(array $attributes): array
-    {
-        array_unshift($attributes, [
-            'code' => 'price',
-            'label' => 'Cena',
-            'unit' => 'PLN',
-            'validation' => [
-                'numeric' => true,
-                'min' => 0,
-                'max' => 999999999
-            ],
-            'values' => []
-        ]);
-
-        return $attributes;
     }
 
 }

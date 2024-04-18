@@ -39,6 +39,18 @@ class GetCategoryAttributesService
             }
         }
 
+        array_unshift($response[$this->model->dataKey()], [
+            'code' => 'price',
+            'label' => 'Cena',
+            'unit' => 'PLN',
+            'validation' => [
+                'numeric' => true,
+                'min' => 0,
+                'max' => 10000000
+            ],
+            'values' => []
+        ]);
+
         return $response[$this->model->dataKey()];
     }
 

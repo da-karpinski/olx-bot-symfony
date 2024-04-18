@@ -2,43 +2,107 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Orm\Filter\ExistsFilter;
+use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
 use App\Repository\NotificationRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: NotificationRepository::class)]
+#[ApiResource(
+    operations: [
+        new Get(
+            uriTemplate: '/notification/{id}',
+            normalizationContext: ['groups' => ['notification:view']],
+            security: 'is_granted("'.User::ROLE_ADMIN.'") or is_granted("'.User::ROLE_USER.'")',
+        ),
+        new GetCollection(
+            uriTemplate: '/notification',
+            paginationEnabled: true,
+            paginationItemsPerPage: 12,
+            normalizationContext: ['groups' => ['notification:list']],
+            security: 'is_granted("'.User::ROLE_ADMIN.'") or is_granted("'.User::ROLE_USER.'")',
+        )
+    ],
+    normalizationContext: ['groups' => ['notification:list', 'notification:view'], 'enable_max_depth' => true],
+    paginationClientEnabled: true,
+    paginationClientItemsPerPage: true,
+    paginationEnabled: true,
+    paginationItemsPerPage: 12
+)]
+#[ApiFilter(SearchFilter::class, properties: [
+    'worker.id' => SearchFilter::STRATEGY_EXACT,
+    'offer.id' => SearchFilter::STRATEGY_EXACT,
+    'integration.id' => SearchFilter::STRATEGY_EXACT,
+    'worker.name' => SearchFilter::STRATEGY_PARTIAL,
+    'offer.title' => SearchFilter::STRATEGY_PARTIAL,
+    'integration.name' => SearchFilter::STRATEGY_PARTIAL,
+    'integration.integrationType.id' => SearchFilter::STRATEGY_EXACT,
+    'integration.integrationType.name' => SearchFilter::STRATEGY_PARTIAL,
+    'integration.integrationType.integrationCode' => SearchFilter::STRATEGY_EXACT,
+])]
+#[ApiFilter(OrderFilter::class, properties: [
+    'id',
+    'createdAt',
+    'sentAt',
+    'title',
+    'offer.id',
+    'offer.title',
+    'worker.id',
+    'worker.name',
+    'integration.id',
+    'integration.name',
+    'integration.integrationType.id',
+    'integration.integrationType.name',
+])]
+#[ApiFilter(ExistsFilter::class, properties: ['sentAt'])]
 class Notification
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['notification:list', 'notification:view'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'notifications')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['notification:list', 'notification:view'])]
     private ?Worker $worker = null;
 
-    #[ORM\ManyToOne(inversedBy: 'notifications')]
+    #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['notification:list', 'notification:view'])]
     private ?Offer $offer = null;
 
-    #[ORM\ManyToOne(inversedBy: 'notifications')]
+    #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['notification:list', 'notification:view'])]
     private ?Integration $integration = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['notification:view'])]
     private ?array $additionalData = null;
 
     #[ORM\Column]
+    #[Groups(['notification:list', 'notification:view'])]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['notification:list', 'notification:view'])]
     private ?\DateTimeImmutable $sentAt = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['notification:list', 'notification:view'])]
     private ?string $title = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(['notification:view'])]
     private ?string $message = null;
 
     public function getId(): ?int

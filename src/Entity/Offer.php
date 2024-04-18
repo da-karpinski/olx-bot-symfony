@@ -60,7 +60,10 @@ class Offer
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['offer:list', 'offer:view'])]
+    #[Groups([
+        'offer:list', 'offer:view',
+        'notification:list', 'notification:view'
+    ])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'offers')]
@@ -85,7 +88,10 @@ class Offer
     private ?string $url = null;
 
     #[ORM\Column]
-    #[Groups(['offer:list', 'offer:view'])]
+    #[Groups([
+        'offer:list', 'offer:view',
+        'notification:list', 'notification:view'
+    ])]
     private ?int $olxId = null;
 
     #[ORM\Column(nullable: true)]
@@ -93,7 +99,10 @@ class Offer
     private ?\DateTimeImmutable $refreshedAt = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['offer:list', 'offer:view'])]
+    #[Groups([
+        'offer:list', 'offer:view',
+        'notification:list', 'notification:view'
+    ])]
     private ?string $title = null;
 
     #[ORM\Column]

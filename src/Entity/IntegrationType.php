@@ -76,7 +76,8 @@ class IntegrationType
     #[Groups([
         'integration-type:list', 'integration-type:view',
         'user:view',
-        'integration:view', 'integration:list'
+        'integration:view', 'integration:list',
+        'notification:list', 'notification:view'
     ])]
     private ?int $id = null;
 
@@ -84,14 +85,16 @@ class IntegrationType
     #[Groups([
         'integration-type:list', 'integration-type:view',
         'integration-type:write', 'user:view',
-        'integration:view', 'integration:list'
+        'integration:view', 'integration:list',
+        'notification:list', 'notification:view'
     ])]
     private ?string $name = null;
 
     #[ORM\Column(length: 60)]
     #[Groups([
         'integration-type:list', 'integration-type:view',
-        'integration:view', 'integration:list'
+        'integration:view', 'integration:list',
+        'notification:list', 'notification:view'
     ])]
     private ?string $integrationCode = null;
 

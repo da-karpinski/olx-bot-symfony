@@ -82,11 +82,19 @@ class Integration
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['user:view', 'integration:view', 'integration:list'])]
+    #[Groups([
+        'user:view',
+        'integration:view', 'integration:list',
+        'notification:list', 'notification:view'
+    ])]
     private ?int $id = null;
 
     #[ORM\Column(length: 100)]
-    #[Groups(['user:view', 'integration:view', 'integration:list'])]
+    #[Groups([
+        'user:view',
+        'integration:view', 'integration:list',
+        'notification:list', 'notification:view'
+    ])]
     private ?string $name = null;
 
     #[ORM\ManyToOne(inversedBy: 'integrations')]
@@ -96,7 +104,11 @@ class Integration
 
     #[ORM\ManyToOne(inversedBy: 'integrations')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['user:view', 'integration:view', 'integration:list'])]
+    #[Groups([
+        'user:view',
+        'integration:view', 'integration:list',
+        'notification:list', 'notification:view'
+    ])]
     private ?IntegrationType $integrationType = null;
 
     #[ORM\Column]

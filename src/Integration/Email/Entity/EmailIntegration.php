@@ -9,6 +9,9 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: EmailIntegrationRepository::class)]
 class EmailIntegration
 {
+
+    public const SUPPORTED_LOCALES = ['en', 'pl'];
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]

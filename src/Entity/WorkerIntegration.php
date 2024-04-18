@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\WorkerIntegrationRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: WorkerIntegrationRepository::class)]
 class WorkerIntegration
@@ -11,10 +12,12 @@ class WorkerIntegration
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['integration:view'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'workerIntegrations')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['integration:view'])]
     private ?Worker $worker = null;
 
     #[ORM\ManyToOne(inversedBy: 'workerIntegrations')]

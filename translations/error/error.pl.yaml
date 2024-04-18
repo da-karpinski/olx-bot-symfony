@@ -15,3 +15,7 @@ error:
 
   worker:
     create-insufficient-permissions: 'Niewystarczające uprawnienia do utworzenia pracownika.'
+
+  integration:
+    locale:
+      not-supported: 'Język "{{ locale }}" nie jest obsługiwany przez wybraną integrację.'

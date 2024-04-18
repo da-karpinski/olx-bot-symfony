@@ -34,6 +34,11 @@ class IntegrationEmailService implements IntegrationInterface
     {
     }
 
+    public function getEntity(): string
+    {
+        return EmailIntegration::class;
+    }
+
     public function prepareNotifications(array $offers, Worker $worker, Integration $integration): Notification|array
     {
 

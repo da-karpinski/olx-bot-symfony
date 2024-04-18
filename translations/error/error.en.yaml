@@ -15,3 +15,7 @@ error:
 
   worker:
     create-insufficient-permissions: 'Insufficient permissions to create worker.'
+
+  integration:
+    locale:
+      not-supported: 'Locale "{{ locale }}" is not supported by selected integration.'

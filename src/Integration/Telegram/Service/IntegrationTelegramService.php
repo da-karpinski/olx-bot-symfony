@@ -36,6 +36,11 @@ class IntegrationTelegramService implements IntegrationInterface
     {
     }
 
+    public function getEntity(): string
+    {
+        return TelegramIntegration::class;
+    }
+
     public function prepareNotifications(array $offers, Worker $worker, Integration $integration): Notification|array
     {
         $notifications = [];

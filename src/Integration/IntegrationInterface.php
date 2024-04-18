@@ -9,6 +9,8 @@ use App\Entity\Worker;
 
 interface IntegrationInterface
 {
+    public function getEntity(): string;
+
     /**
      * @param Offer[] $offers
      * @param Worker $worker

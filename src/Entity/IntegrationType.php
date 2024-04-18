@@ -73,15 +73,26 @@ class IntegrationType
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['integration-type:list', 'integration-type:view', 'user:view'])]
+    #[Groups([
+        'integration-type:list', 'integration-type:view',
+        'user:view',
+        'integration:view', 'integration:list'
+    ])]
     private ?int $id = null;
 
     #[ORM\Column(length: 60)]
-    #[Groups(['integration-type:list', 'integration-type:view', 'integration-type:write', 'user:view'])]
+    #[Groups([
+        'integration-type:list', 'integration-type:view',
+        'integration-type:write', 'user:view',
+        'integration:view', 'integration:list'
+    ])]
     private ?string $name = null;
 
     #[ORM\Column(length: 60)]
-    #[Groups(['integration-type:list', 'integration-type:view'])]
+    #[Groups([
+        'integration-type:list', 'integration-type:view',
+        'integration:view', 'integration:list'
+    ])]
     private ?string $integrationCode = null;
 
     #[ORM\Column]

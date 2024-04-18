@@ -10,6 +10,9 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: TelegramIntegrationRepository::class)]
 class TelegramIntegration
 {
+
+    public const SUPPORTED_LOCALES = ['en', 'pl'];
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]

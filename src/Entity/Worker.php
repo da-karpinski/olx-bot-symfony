@@ -14,7 +14,7 @@ class Worker
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['user:view', 'offer:view', 'offer:list'])]
+    #[Groups(['user:view', 'offer:view', 'offer:list', 'integration:view'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'workers')]
@@ -55,7 +55,7 @@ class Worker
     private Collection $notifications;
 
     #[ORM\Column(length: 100)]
-    #[Groups(['user:view', 'offer:view', 'offer:list'])]
+    #[Groups(['user:view', 'offer:view', 'offer:list', 'integration:view'])]
     private ?string $name = null;
 
     public function __construct()

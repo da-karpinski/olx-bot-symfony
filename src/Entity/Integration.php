@@ -85,7 +85,8 @@ class Integration
     #[Groups([
         'user:view',
         'integration:view', 'integration:list',
-        'notification:list', 'notification:view'
+        'notification:list', 'notification:view',
+        'worker:view'
     ])]
     private ?int $id = null;
 
@@ -93,7 +94,8 @@ class Integration
     #[Groups([
         'user:view',
         'integration:view', 'integration:list',
-        'notification:list', 'notification:view'
+        'notification:list', 'notification:view',
+        'worker:view'
     ])]
     private ?string $name = null;
 
@@ -107,7 +109,8 @@ class Integration
     #[Groups([
         'user:view',
         'integration:view', 'integration:list',
-        'notification:list', 'notification:view'
+        'notification:list', 'notification:view',
+        'worker:view'
     ])]
     private ?IntegrationType $integrationType = null;
 

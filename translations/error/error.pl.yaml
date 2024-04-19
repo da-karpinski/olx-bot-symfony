@@ -19,6 +19,8 @@ error:
   integration:
     locale:
       not-supported: 'Język "{{ locale }}" nie jest obsługiwany przez wybraną integrację.'
+    user:
+        different-user: 'Integracja należy do innego użytkownika.'
 
   category-attribute:
     key-not-allowed: 'Atrybut "{{ key }}" jest niedozwolony.'

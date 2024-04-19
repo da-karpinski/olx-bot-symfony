@@ -77,7 +77,8 @@ class IntegrationType
         'integration-type:list', 'integration-type:view',
         'user:view',
         'integration:view', 'integration:list',
-        'notification:list', 'notification:view'
+        'notification:list', 'notification:view',
+        'worker:view'
     ])]
     private ?int $id = null;
 
@@ -86,7 +87,8 @@ class IntegrationType
         'integration-type:list', 'integration-type:view',
         'integration-type:write', 'user:view',
         'integration:view', 'integration:list',
-        'notification:list', 'notification:view'
+        'notification:list', 'notification:view',
+        'worker:view'
     ])]
     private ?string $name = null;
 
@@ -94,7 +96,8 @@ class IntegrationType
     #[Groups([
         'integration-type:list', 'integration-type:view',
         'integration:view', 'integration:list',
-        'notification:list', 'notification:view'
+        'notification:list', 'notification:view',
+        'worker:view'
     ])]
     private ?string $integrationCode = null;
 

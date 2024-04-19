@@ -2,19 +2,97 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Orm\Filter\BooleanFilter;
+use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Metadata\Post;
+use App\ApiResource\Worker\Dto\WorkerCreateInput;
+use App\ApiResource\Worker\Dto\WorkerUpdateInput;
+use App\ApiResource\Worker\Processor\WorkerCreateInputProcessor;
+use App\ApiResource\Worker\Processor\WorkerUpdateInputProcessor;
 use App\Repository\WorkerRepository;
+use App\Security\Voter\WorkerVoter;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: WorkerRepository::class)]
+#[ApiResource(
+    operations: [
+        new Get(
+            uriTemplate: '/worker/{id}',
+            normalizationContext: ['groups' => ['worker:view']],
+            security: 'is_granted("'.WorkerVoter::WORKER_GET.'", object)',
+        ),
+        new GetCollection(
+            uriTemplate: '/worker',
+            paginationEnabled: true,
+            paginationItemsPerPage: 12,
+            normalizationContext: ['groups' => ['worker:list']],
+            security: 'is_granted("'.User::ROLE_ADMIN.'") or is_granted("'.User::ROLE_USER.'")',
+        ),
+        new Patch(
+            uriTemplate: '/worker/{id}',
+            normalizationContext: ['groups' => ['worker:view']],
+            denormalizationContext: ['groups' => ['worker:write']],
+            security: 'is_granted("'.WorkerVoter::WORKER_EDIT.'", object)',
+            input: WorkerUpdateInput::class,
+            processor: WorkerUpdateInputProcessor::class
+        ),
+        new Post(
+            uriTemplate: '/worker',
+            normalizationContext: ['groups' => ['worker:view']],
+            denormalizationContext: ['groups' => ['worker:write']],
+            securityPostDenormalize: 'is_granted("'.User::ROLE_ADMIN.'") or is_granted("'.User::ROLE_USER.'")',
+            input: WorkerCreateInput::class,
+            processor: WorkerCreateInputProcessor::class
+        ),
+        new Delete(
+            uriTemplate: '/worker/{id}',
+            security: 'is_granted("'.WorkerVoter::WORKER_DELETE.'", object)',
+        )
+    ],
+    normalizationContext: ['groups' => ['worker:list', 'worker:view', 'worker:write'], 'enable_max_depth' => true],
+    denormalizationContext: ['groups' => ['worker:write']],
+    paginationClientEnabled: true,
+    paginationClientItemsPerPage: true,
+    paginationEnabled: true,
+    paginationItemsPerPage: 12
+)]
+#[ApiFilter(SearchFilter::class, properties: [
+    'name' => SearchFilter::STRATEGY_PARTIAL,
+    'user.id' => SearchFilter::STRATEGY_EXACT,
+    'city.id' => SearchFilter::STRATEGY_EXACT,
+    'city.name' => SearchFilter::STRATEGY_PARTIAL,
+    'category.id' => SearchFilter::STRATEGY_EXACT,
+    'category.name' => SearchFilter::STRATEGY_PARTIAL,
+    'workerIntegrations.integration.id' => SearchFilter::STRATEGY_EXACT,
+    'workerIntegrations.integration.name' => SearchFilter::STRATEGY_PARTIAL,
+    'workerIntegrations.integrationType.id' => SearchFilter::STRATEGY_EXACT,
+    'workerIntegrations.integrationType.name' => SearchFilter::STRATEGY_PARTIAL,
+])]
+#[ApiFilter(BooleanFilter::class, properties: ['enabled'])]
+#[ApiFilter(OrderFilter::class, properties: [
+    'id',
+    'name',
+    'createdAt',
+    'lastExecutedAt',
+    'executionInterval'
+])]
 class Worker
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     #[Groups([
+        'worker:view', 'worker:list',
         'user:view',
         'offer:view', 'offer:list',
         'integration:view',
@@ -24,36 +102,47 @@ class Worker
 
     #[ORM\ManyToOne(inversedBy: 'workers')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['worker:view', 'worker:list'])]
     private ?User $user = null;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['worker:view', 'worker:list'])]
     private ?City $city = null;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['worker:view', 'worker:list'])]
     private ?Category $category = null;
 
     #[ORM\Column]
-    #[Groups(['user:view'])]
+    #[Groups([
+        'worker:view', 'worker:list',
+        'user:view'
+    ])]
     private ?bool $enabled = null;
 
     #[ORM\Column]
+    #[Groups(['worker:view', 'worker:list'])]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['worker:view', 'worker:list'])]
     private ?\DateTimeImmutable $lastExecutedAt = null;
 
     #[ORM\Column]
+    #[Groups(['worker:view', 'worker:list'])]
     private ?int $executionInterval = null;
 
     #[ORM\OneToMany(targetEntity: CategoryAttribute::class, mappedBy: 'worker', orphanRemoval: true)]
+    #[Groups(['worker:view'])]
     private Collection $categoryAttributes;
 
     #[ORM\OneToMany(targetEntity: Offer::class, mappedBy: 'worker', orphanRemoval: true)]
     private Collection $offers;
 
     #[ORM\OneToMany(targetEntity: WorkerIntegration::class, mappedBy: 'worker')]
+    #[Groups(['worker:view'])]
     private Collection $workerIntegrations;
 
     #[ORM\OneToMany(targetEntity: Notification::class, mappedBy: 'worker')]
@@ -61,6 +150,7 @@ class Worker
 
     #[ORM\Column(length: 100)]
     #[Groups([
+        'worker:view', 'worker:list',
         'user:view',
         'offer:view', 'offer:list',
         'integration:view',

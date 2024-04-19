@@ -12,7 +12,10 @@ class WorkerIntegration
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['integration:view'])]
+    #[Groups([
+        'integration:view',
+        'worker:view'
+    ])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'workerIntegrations')]
@@ -22,6 +25,7 @@ class WorkerIntegration
 
     #[ORM\ManyToOne(inversedBy: 'workerIntegrations')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['worker:view'])]
     private ?Integration $integration = null;
 
     public function getId(): ?int

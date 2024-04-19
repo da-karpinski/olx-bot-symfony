@@ -19,6 +19,8 @@ error:
   integration:
     locale:
       not-supported: 'Locale "{{ locale }}" is not supported by selected integration.'
+    user:
+      different-user: 'Integration belongs to a different user.'
 
   category-attribute:
     key-not-allowed: 'Attribute key "{{ key }}" is not allowed.'

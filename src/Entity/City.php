@@ -42,7 +42,10 @@ class City
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['city:view', 'city:list'])]
+    #[Groups([
+        'city:view', 'city:list',
+        'worker:view', 'worker:list'
+    ])]
     private ?int $id = null;
 
     #[ORM\Column]
@@ -50,11 +53,16 @@ class City
 
     #[ORM\ManyToOne(inversedBy: 'cities')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['city:view', 'city:list'])]
+    #[Groups([
+        'city:view', 'city:list',
+        'worker:view', 'worker:list'])]
     private ?CountryRegion $region = null;
 
     #[ORM\Column(length: 60)]
-    #[Groups(['city:view', 'city:list'])]
+    #[Groups([
+        'city:view', 'city:list',
+        'worker:view', 'worker:list'
+    ])]
     private ?string $name = null;
 
     public function getId(): ?int

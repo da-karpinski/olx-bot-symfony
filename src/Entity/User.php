@@ -82,7 +82,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['user:list', 'user:view', 'user:write', 'integration:view'])]
+    #[Groups([
+        'user:list', 'user:view', 'user:write',
+        'integration:view',
+        'worker:view', 'worker:list'
+    ])]
     private ?int $id = null;
 
     #[ORM\Column(length: 180)]
@@ -104,7 +108,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $password = null;
 
     #[ORM\Column(length: 100)]
-    #[Groups(['user:list', 'user:view', 'user:write', 'integration:view'])]
+    #[Groups([
+        'user:list', 'user:view',
+        'user:write', 'integration:view',
+        'worker:view', 'worker:list'
+    ])]
     private ?string $name = null;
 
     #[ORM\OneToMany(targetEntity: Worker::class, mappedBy: 'user', orphanRemoval: true)]

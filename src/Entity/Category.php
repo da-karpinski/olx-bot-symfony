@@ -65,18 +65,27 @@ class Category
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['category:view', 'category:list'])]
+    #[Groups([
+        'category:view', 'category:list',
+        'worker:view', 'worker:list'
+    ])]
     private ?int $id = null;
 
     #[ORM\Column]
     private ?int $olxId = null;
 
     #[ORM\Column(length: 60)]
-    #[Groups(['category:view', 'category:list'])]
+    #[Groups([
+        'category:view', 'category:list',
+        'worker:view', 'worker:list'
+    ])]
     private ?string $name = null;
 
     #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'parentId')]
-    #[Groups(['category:view', 'category:list'])]
+    #[Groups([
+        'category:view', 'category:list',
+        'worker:view', 'worker:list'
+    ])]
     private ?self $parent = null;
 
     #[ORM\OneToMany(targetEntity: self::class, mappedBy: 'category')]

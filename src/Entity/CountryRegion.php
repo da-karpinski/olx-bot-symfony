@@ -38,14 +38,22 @@ class CountryRegion
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['country-region:view', 'country-region:list', 'city:view', 'city:list'])]
+    #[Groups([
+        'country-region:view', 'country-region:list',
+        'city:view', 'city:list',
+        'worker:view', 'worker:list'
+    ])]
     private ?int $id = null;
 
     #[ORM\Column]
     private ?int $olxId = null;
 
     #[ORM\Column(length: 60)]
-    #[Groups(['country-region:view', 'country-region:list', 'city:view', 'city:list'])]
+    #[Groups([
+        'country-region:view', 'country-region:list',
+        'city:view', 'city:list',
+        'worker:view', 'worker:list'
+    ])]
     private ?string $name = null;
 
     #[ORM\OneToMany(targetEntity: City::class, mappedBy: 'region')]

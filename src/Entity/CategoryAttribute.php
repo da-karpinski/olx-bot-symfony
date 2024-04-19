@@ -31,7 +31,10 @@ class CategoryAttribute
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['category-attribute:list'])]
+    #[Groups([
+        'category-attribute:list',
+        'worker:view'
+    ])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'categoryAttributes', cascade: ['persist'])]
@@ -39,11 +42,17 @@ class CategoryAttribute
     private ?Worker $worker = null;
 
     #[ORM\Column(length: 60)]
-    #[Groups(['category-attribute:list'])]
+    #[Groups([
+        'category-attribute:list',
+        'worker:view'
+    ])]
     private ?string $attributeCode = null;
 
     #[ORM\Column(length: 60)]
-    #[Groups(['category-attribute:list'])]
+    #[Groups([
+        'category-attribute:list',
+        'worker:view'
+    ])]
     private ?string $attributeValue = null;
 
     public function getId(): ?int

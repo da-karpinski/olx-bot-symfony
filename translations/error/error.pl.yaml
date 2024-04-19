@@ -19,3 +19,8 @@ error:
   integration:
     locale:
       not-supported: 'Język "{{ locale }}" nie jest obsługiwany przez wybraną integrację.'
+
+  category-attribute:
+    key-not-allowed: 'Atrybut "{{ key }}" jest niedozwolony.'
+    value-out-of-range: 'Wartość atrybutu "{{ attribute }}" jest poza zakresem. Maksymalna dozwolona wartość to {{ max }}, a minimalna to {{ min }}.'
+    value-not-allowed: 'Wartość atrybutu "{{ attribute }}", "{{ value }}" jest niedozwolona.'

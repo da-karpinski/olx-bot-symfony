@@ -59,10 +59,12 @@ class GetOffersForWorkerService
                 str_ends_with($attribute->getAttributeCode(), ':from')
             ){
                 $key = 'filter_float_' . $attribute->getAttributeCode();
+                $query[$key] = $attribute->getAttributeValue();
             }else{
+                $values = explode(',', $attribute->getAttributeValue());
                 $key = 'filter_enum_' . $attribute->getAttributeCode();
+                $query[$key] = $values;
             }
-            $query[$key] = $attribute->getAttributeValue();
         }
         return $query;
     }

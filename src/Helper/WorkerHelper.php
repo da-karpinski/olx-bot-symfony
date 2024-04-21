@@ -42,6 +42,7 @@ class WorkerHelper
                 ->setAttributeValue($inputCategoryAttribute->attributeValue);
 
             $this->em->persist($categoryAttributeEntity);
+            $worker->addCategoryAttribute($categoryAttributeEntity);
         }
 
     }

@@ -10,6 +10,7 @@ use App\Entity\City;
 use App\Entity\User;
 use App\Entity\Worker;
 use App\Helper\WorkerHelper;
+use App\Service\OfferService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
@@ -22,7 +23,8 @@ class WorkerCreateInputProcessor implements ProcessorInterface
         private readonly Security $security,
         #[Autowire(service: 'api_platform.doctrine.orm.state.persist_processor')]
         private ProcessorInterface $persistProcessor,
-        private readonly WorkerHelper $workerHelper
+        private readonly WorkerHelper $workerHelper,
+        private readonly OfferService $offerService,
     )
     {
     }
@@ -55,7 +57,7 @@ class WorkerCreateInputProcessor implements ProcessorInterface
 
         $this->workerHelper->addCategoryAttributes($data->categoryAttributes, $worker);
         $this->workerHelper->addIntegrations($data->integrations, $worker);
-        //TODO: prefetch offers
+        $this->offerService->processOffersForWorker($worker, true);
 
         return $this->persistProcessor->process($worker, $operation, $uriVariables, $context);
 

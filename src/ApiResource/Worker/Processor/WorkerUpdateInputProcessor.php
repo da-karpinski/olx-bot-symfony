@@ -11,6 +11,7 @@ use App\Entity\City;
 use App\Entity\Worker;
 use App\Entity\WorkerIntegration;
 use App\Helper\WorkerHelper;
+use App\Service\OfferService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
@@ -21,7 +22,8 @@ class WorkerUpdateInputProcessor implements ProcessorInterface
         private readonly EntityManagerInterface $em,
         #[Autowire(service: 'api_platform.doctrine.orm.state.persist_processor')]
         private ProcessorInterface $persistProcessor,
-        private readonly WorkerHelper $workerHelper
+        private readonly WorkerHelper $workerHelper,
+        private readonly OfferService $offerService,
     )
     {
     }
@@ -33,6 +35,8 @@ class WorkerUpdateInputProcessor implements ProcessorInterface
             return null;
         }
 
+        $prefetchNeeded = false;
+
         $worker = $this->em->getRepository(Worker::class)->find($uriVariables['id']);
 
         if(!empty($data->name)) {
@@ -42,6 +46,7 @@ class WorkerUpdateInputProcessor implements ProcessorInterface
         if(!empty($data->city->id)) {
             $city = $this->em->getRepository(City::class)->find($data->city->id);
             $worker->setCity($city);
+            $prefetchNeeded = true;
         }
 
         if(!empty($data->category->id)) {
@@ -51,9 +56,13 @@ class WorkerUpdateInputProcessor implements ProcessorInterface
             }
             $category = $this->em->getRepository(Category::class)->find($data->category->id);
             $worker->setCategory($category);
+            $prefetchNeeded = true;
         }
 
         if(!is_null($data->enabled)) {
+            if($data->enabled === true and $worker->getEnabled() === false){
+                $prefetchNeeded = true;
+            }
             $worker->setEnabled($data->enabled);
         }
 
@@ -67,6 +76,7 @@ class WorkerUpdateInputProcessor implements ProcessorInterface
             if(!empty($data->category->id)){
                 $this->workerHelper->addCategoryAttributes($data->categoryAttributes, $worker);
             }
+            $prefetchNeeded = true;
         }
 
         if(!is_null($data->integrations)) {
@@ -74,7 +84,9 @@ class WorkerUpdateInputProcessor implements ProcessorInterface
             $this->workerHelper->addIntegrations($data->integrations, $worker);
         }
 
-        //TODO: prefetch offers
+        if($prefetchNeeded){
+            $this->offerService->processOffersForWorker($worker, true);
+        }
 
         return $this->persistProcessor->process($worker, $operation, $uriVariables, $context);
 

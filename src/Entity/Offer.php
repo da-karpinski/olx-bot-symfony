@@ -45,6 +45,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
     'worker.name' => SearchFilter::STRATEGY_PARTIAL,
 ])]
 #[ApiFilter(OrderFilter::class, properties: [
+    'id',
     'createdAt',
     'lastSeenAt',
     'validTo',
@@ -124,6 +125,9 @@ class Offer
     #[ORM\OneToMany(targetEntity: OfferParameter::class, mappedBy: 'offer', orphanRemoval: true)]
     #[Groups(['offer:view'])]
     private Collection $offerParameters;
+
+    #[ORM\Column(nullable: true)]
+    private ?bool $prefetched = null;
 
     public function __construct()
     {
@@ -324,6 +328,18 @@ class Offer
                 $offerParameter->setOffer(null);
             }
         }
+
+        return $this;
+    }
+
+    public function isPrefetched(): ?bool
+    {
+        return $this->prefetched;
+    }
+
+    public function setPrefetched(?bool $prefetched): static
+    {
+        $this->prefetched = $prefetched;
 
         return $this;
     }

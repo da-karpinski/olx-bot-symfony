@@ -31,11 +31,17 @@ final class OfferExtension implements QueryCollectionExtensionInterface, QueryIt
 
     private function addWhere(QueryBuilder $queryBuilder, string $resourceClass): void
     {
-        if (Offer::class !== $resourceClass || $this->security->isGranted('ROLE_ADMIN') || null === $user = $this->security->getUser()) {
+        if (Offer::class !== $resourceClass || null === $user = $this->security->getUser()) {
             return;
         }
 
         $rootAlias = $queryBuilder->getRootAliases()[0];
+        $queryBuilder->andWhere(sprintf('%s.prefetched = false', $rootAlias));
+
+        if($this->security->isGranted('ROLE_ADMIN')){
+            return;
+        }
+
         $queryBuilder->join(sprintf('%s.worker', $rootAlias), 'w');
         $queryBuilder->andWhere('w.user = :current_user');
         $queryBuilder->setParameter('current_user', $user->getId());

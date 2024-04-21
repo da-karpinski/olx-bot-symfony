@@ -21,7 +21,7 @@ class OfferService
     {
     }
 
-    public function processOffersForWorker(Worker $worker): array
+    public function processOffersForWorker(Worker $worker, bool $prefetch = false): array
     {
         $results = [
             'new' => 0,
@@ -40,29 +40,40 @@ class OfferService
 
             $offer = OfferToEntityAdapter::adapt($olxOffer, $worker);
 
+            $offer->setPrefetched($prefetch);
+
             if($existingOffer = $this->em->getRepository(Offer::class)->findOneBy(['olxId' => $offer->getOlxId(), 'worker' => $worker])){
                 $existingOffer->setLastSeenAt(new \DateTimeImmutable());
                 $this->em->persist($existingOffer);
                 $results['updated']++;
+
+                /** Add new offer */
             }else{
                 $this->em->persist($offer);
+
+                if($prefetch) continue;
+
                 foreach ($olxOffer['params'] as $param) {
                     if($param['key'] !== 'price') {
                         $offerParameter = OfferParameterToEntityAdapter::adapt($param, $offer);
                         $this->em->persist($offerParameter);
                     }
                 }
+                //TODO: download offer photos
                 $newOffers[] = $offer;
                 $results['new']++;
             }
         }
 
         $worker->setLastExecutedAt(new \DateTimeImmutable());
-        $this->em->persist($worker);
-        $this->em->flush();
 
-        if(!empty($newOffers)){
-            $this->createNotifications($newOffers, $worker);
+        if(!$prefetch){
+            $this->em->persist($worker);
+            $this->em->flush();
+
+            if(!empty($newOffers)){
+                $this->createNotifications($newOffers, $worker);
+            }
         }
 
         return $results;

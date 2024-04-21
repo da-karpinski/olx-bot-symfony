@@ -54,3 +54,11 @@ services:
         class: App\Logger\IntegrationDoctrineHandler
         arguments:
             - "@doctrine.orm.entity_manager"
+
+    _instanceof:
+        App\Integration\IntegrationInterface:
+            tags: [ 'app.integration_handler' ]
+
+    App\Integration\IntegrationFactory:
+        arguments:
+            - !tagged_iterator app.integration_handler

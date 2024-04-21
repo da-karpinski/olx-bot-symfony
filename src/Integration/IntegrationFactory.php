@@ -2,31 +2,26 @@
 
 namespace App\Integration;
 
-use App\Integration\Email\Service\IntegrationEmailService;
-use App\Integration\Telegram\Service\IntegrationTelegramService;
-
 class IntegrationFactory
 {
+    /**
+     * @var IntegrationInterface[]
+     */
+    private $integrations;
 
-    public function __construct(
-        private readonly IntegrationTelegramService $integrationTelegramService,
-        private readonly IntegrationEmailService $integrationEmailService,
-    )
+    public function __construct(iterable $integrations)
     {
+        $this->integrations = $integrations;
     }
 
-    public function getIntegration(string $integrationCode): IntegrationInterface
+    public function getIntegration(string $name): ?IntegrationInterface
     {
-        $class = match ($integrationCode) {
-            IntegrationEmailService::INTEGRATION_CODE => $this->integrationEmailService,
-            IntegrationTelegramService::INTEGRATION_CODE => $this->integrationTelegramService,
-            default => null
-        };
-
-        if ($class) {
-            return $class;
+        foreach ($this->integrations as $integration) {
+            if ($integration::INTEGRATION_CODE === $name) {
+                return $integration;
+            }
         }
 
-        throw new \RuntimeException('Integration not found');
+        return null;
     }
 }

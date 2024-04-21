@@ -85,7 +85,9 @@ class OfferService
 
         foreach ($workerIntegrations as $workerIntegration) {
             $integration = $workerIntegration->getIntegration();
-            $notifications = $this->integrationFactory->getIntegration($integration->getIntegrationType()->getIntegrationCode())->prepareNotifications($offers, $worker, $integration);
+            $notifications = $this->integrationFactory
+                ->getIntegration($integration->getIntegrationType()->getIntegrationCode())
+                ->prepareNotifications($offers, $worker, $integration);
 
             if(is_array($notifications)) {
                 foreach ($notifications as $notification) {

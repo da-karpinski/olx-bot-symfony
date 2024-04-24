@@ -58,7 +58,13 @@ services:
     _instanceof:
         App\Integration\IntegrationInterface:
             tags: [ 'app.integration_handler' ]
+        App\Integration\IntegrationConfigInterface:
+            tags: [ 'app.integration_config_handler' ]
 
     App\Integration\IntegrationFactory:
         arguments:
             - !tagged_iterator app.integration_handler
+
+    App\Integration\IntegrationConfigFactory:
+        arguments:
+            - !tagged_iterator app.integration_config_handler

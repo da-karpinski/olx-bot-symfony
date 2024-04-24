@@ -14,7 +14,9 @@ use ApiPlatform\Metadata\Post;
 use App\ApiResource\Integration\Dto\IntegrationCreateInput;
 use App\ApiResource\Integration\Dto\IntegrationUpdateInput;
 use App\ApiResource\Integration\Processor\IntegrationCreateInputProcessor;
+use App\ApiResource\Integration\Processor\IntegrationDeleteInputProcessor;
 use App\ApiResource\Integration\Processor\IntegrationUpdateInputProcessor;
+use App\ApiResource\Integration\Provider\IntegrationOutputProvider;
 use App\Repository\IntegrationRepository;
 use App\Security\Voter\IntegrationVoter;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -56,10 +58,12 @@ use Symfony\Component\Serializer\Annotation\Groups;
         new Delete(
             uriTemplate: '/integration/{id}',
             security: 'is_granted("'.IntegrationVoter::INTEGRATION_DELETE.'", object)',
+            processor: IntegrationDeleteInputProcessor::class
         )
     ],
     normalizationContext: ['groups' => ['integration:list', 'integration:view', 'integration:write'], 'enable_max_depth' => true],
     denormalizationContext: ['groups' => ['integration:write']],
+    provider: IntegrationOutputProvider::class,
     paginationClientEnabled: true,
     paginationClientItemsPerPage: true,
     paginationEnabled: true,
@@ -125,6 +129,9 @@ class Integration
     #[ORM\Column(length: 2)]
     #[Groups(['integration:view', 'integration:list'])]
     private ?string $localeCode = null;
+
+    #[Groups(['integration:view', 'integration:list'])]
+    private $integrationConfig;
 
     public function __construct()
     {
@@ -225,4 +232,17 @@ class Integration
 
         return $this;
     }
+
+    public function getIntegrationConfig()
+    {
+        return $this->integrationConfig;
+    }
+
+    public function setIntegrationConfig($integrationConfig): static
+    {
+        $this->integrationConfig = $integrationConfig;
+
+        return $this;
+    }
+
 }

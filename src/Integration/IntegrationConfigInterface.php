@@ -14,6 +14,6 @@ interface IntegrationConfigInterface
 
     public function onUpdate(IntegrationUpdateInput $input, Integration $integration): object;
 
-    public function onDelete($input, Integration $integration): void;
+    public function onDelete(Integration $integration): void;
 
 }

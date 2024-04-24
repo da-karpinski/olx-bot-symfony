@@ -6,6 +6,7 @@ use App\Entity\Integration;
 use App\Integration\Telegram\Repository\TelegramIntegrationRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: TelegramIntegrationRepository::class)]
 class TelegramIntegration
@@ -16,6 +17,7 @@ class TelegramIntegration
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['integration:view', 'integration:list'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'telegramIntegrations')]
@@ -23,18 +25,22 @@ class TelegramIntegration
     private ?Integration $integration = null;
 
     #[ORM\Column(type: Types::BIGINT)]
+    #[Groups(['integration:view'])]
     private ?string $chatId = null;
 
     #[ORM\Column(length: 15)]
+    #[Groups(['integration:view'])]
     private ?string $chatType = null;
 
     #[ORM\Column(length: 10, nullable: true)]
     private ?string $otp = null;
 
     #[ORM\Column]
+    #[Groups(['integration:view', 'integration:list'])]
     private ?bool $active = null;
 
     #[ORM\Column]
+    #[Groups(['integration:view'])]
     private ?\DateTimeImmutable $createdAt = null;
 
     public function getId(): ?int

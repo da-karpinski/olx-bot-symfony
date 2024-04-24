@@ -21,6 +21,8 @@ error:
       not-supported: 'Język "{{ locale }}" nie jest obsługiwany przez wybraną integrację.'
     user:
         different-user: 'Integracja należy do innego użytkownika.'
+    delete:
+        has-workers: 'Nie możesz usunąć integracji z przypisanymi pracownikami. Najpierw usuń tę integrację ze wszystkich pracowników i spróbuj ponownie.'
 
   category-attribute:
     key-not-allowed: 'Atrybut "{{ key }}" jest niedozwolony.'

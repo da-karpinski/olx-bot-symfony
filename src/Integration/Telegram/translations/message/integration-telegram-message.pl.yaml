@@ -30,3 +30,4 @@ configuration:
   success: 'Konfiguracja Twojej integracji "{{ integrationName }}" zakończyła się sukcesem! Teraz możesz połączyć pracownika/ów z tą integracją, aby zacząć otrzymywać powiadomienia.'
   otp-not-found: 'Nie znaleziono kodu OTP. Spróbuj ponownie.'
   update-not-allowed: 'Aktualizacja integracji Telegram nie jest dozwolona. Zamiast tego utwórz nową integrację.'
+  delete: 'Integracja "{{ integrationName }}" została pomyślnie usunięta! Jeśli chcesz ponownie użyć tej integracji, będziesz musiał utworzyć nową i przejść przez proces konfiguracji.'

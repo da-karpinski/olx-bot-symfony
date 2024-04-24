@@ -60,7 +60,9 @@ class IntegrationTelegramConfigService implements IntegrationConfigInterface
             ->setOtp(null)
             ->setActive(true);
 
-        $this->sendConfirmationMessage($integration, $telegramIntegration);
+        $this->translator->setLocale($integration->getLocaleCode());
+        $message = $this->translator->trans('configuration.success', ['{{ integrationName }}' => $integration->getName()], 'integration-telegram-message');
+        $this->sendConfirmationMessage($telegramIntegration, $message);
 
         return $telegramIntegration;
     }
@@ -72,9 +74,19 @@ class IntegrationTelegramConfigService implements IntegrationConfigInterface
         );
     }
 
-    public function onDelete($input, Integration $integration): void
+    public function onDelete(Integration $integration): void
     {
-        // TODO: Implement onDelete() method.
+        $telegramIntegration = $integration->getIntegrationConfig();
+        $this->em->remove($telegramIntegration);
+
+        $this->translator->setLocale($integration->getLocaleCode());
+        $message = $this->translator->trans('configuration.delete', ['{{ integrationName }}' => $integration->getName()], 'integration-telegram-message');
+
+        try{
+            $this->sendConfirmationMessage($telegramIntegration, $message);
+        }catch (\Exception $e){
+            $this->integrationLogger->error('[Telegram Configuration]: Error sending message. Error: ' . $e->getMessage());
+        }
     }
 
     private function adaptToDto($input): IntegrationTelegramConfigCreate
@@ -87,13 +99,9 @@ class IntegrationTelegramConfigService implements IntegrationConfigInterface
         return $configDto;
     }
 
-    private function sendConfirmationMessage(Integration $integration, TelegramIntegration $telegramIntegration): void
+    private function sendConfirmationMessage(TelegramIntegration $telegramIntegration, string $message): void
     {
         $model = TelegramApi::sendMessage;
-
-        $this->translator->setLocale($integration->getLocaleCode());
-
-        $message = $this->translator->trans('configuration.success', ['{{ integrationName }}' => $integration->getName()], 'integration-telegram-message');
 
         $response = $this->apiClient->request(
             TelegramApi::sendMessage->method(),

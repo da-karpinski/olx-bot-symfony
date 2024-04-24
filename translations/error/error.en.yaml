@@ -21,6 +21,8 @@ error:
       not-supported: 'Locale "{{ locale }}" is not supported by selected integration.'
     user:
       different-user: 'Integration belongs to a different user.'
+    delete:
+      has-workers: 'You cannot delete an integration with assigned workers. Remove this integration from all workers first and try again.'
 
   category-attribute:
     key-not-allowed: 'Attribute key "{{ key }}" is not allowed.'

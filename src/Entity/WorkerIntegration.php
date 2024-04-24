@@ -20,7 +20,7 @@ class WorkerIntegration
 
     #[ORM\ManyToOne(inversedBy: 'workerIntegrations')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['integration:view'])]
+    #[Groups(['integration:view', 'integration:list'])]
     private ?Worker $worker = null;
 
     #[ORM\ManyToOne(inversedBy: 'workerIntegrations')]

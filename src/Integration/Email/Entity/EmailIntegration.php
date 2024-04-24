@@ -5,6 +5,7 @@ namespace App\Integration\Email\Entity;
 use App\Entity\Integration;
 use App\Integration\Email\Repository\EmailIntegrationRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: EmailIntegrationRepository::class)]
 class EmailIntegration
@@ -15,6 +16,7 @@ class EmailIntegration
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['integration:view', 'integration:list'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'emailIntegrations')]
@@ -22,12 +24,15 @@ class EmailIntegration
     private ?Integration $integration = null;
 
     #[ORM\Column(length: 100)]
+    #[Groups(['integration:view', 'integration:list'])]
     private ?string $recipientAddress = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['integration:view'])]
     private ?array $ccAddresses = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['integration:view'])]
     private ?array $bccAddresses = null;
 
     public function getId(): ?int

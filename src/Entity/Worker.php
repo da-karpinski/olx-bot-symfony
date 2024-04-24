@@ -95,7 +95,7 @@ class Worker
         'worker:view', 'worker:list',
         'user:view',
         'offer:view', 'offer:list',
-        'integration:view',
+        'integration:view', 'integration:list',
         'notification:list', 'notification:view'
     ])]
     private ?int $id = null;
@@ -153,7 +153,7 @@ class Worker
         'worker:view', 'worker:list',
         'user:view',
         'offer:view', 'offer:list',
-        'integration:view',
+        'integration:view', 'integration:list',
         'notification:list', 'notification:view'
     ])]
     private ?string $name = null;

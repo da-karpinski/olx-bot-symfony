@@ -64,9 +64,9 @@ class IntegrationEmailConfigService implements IntegrationConfigInterface
         return $emailIntegration;
     }
 
-    public function onDelete($input, Integration $integration): void
+    public function onDelete(Integration $integration): void
     {
-        // TODO: Implement onDelete() method.
+        $this->em->remove($integration->getIntegrationConfig());
     }
 
     private function adaptToDto(string $dto, $input): IntegrationEmailConfigCreate|IntegrationEmailConfigUpdate

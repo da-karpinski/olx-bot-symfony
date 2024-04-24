@@ -15,4 +15,11 @@ class IntegrationUpdateInput
     #[ApiProperty(openapiContext: ['type' => 'string', 'example' => 'en'])]
     public ?string $localeCode = null;
 
+    #[Groups(['integration:view', 'integration:write'])]
+    #[ApiProperty(openapiContext: ['type' => 'array', 'example' => [
+        'key1' => 'value1',
+        'key2' => 'value2'
+    ]])]
+    public ?array $integrationConfig = null;
+
 }

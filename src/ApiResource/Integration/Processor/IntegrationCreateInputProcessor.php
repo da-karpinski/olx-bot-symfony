@@ -8,6 +8,7 @@ use App\ApiResource\Integration\Dto\IntegrationCreateInput;
 use App\Entity\Integration;
 use App\Entity\IntegrationType;
 use App\Entity\User;
+use App\Integration\IntegrationConfigFactory;
 use App\Integration\IntegrationFactory;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -25,6 +26,7 @@ class IntegrationCreateInputProcessor implements ProcessorInterface
         private readonly IntegrationFactory $integrationFactory,
         #[Autowire(service: 'api_platform.doctrine.orm.state.persist_processor')]
         private ProcessorInterface $persistProcessor,
+        private readonly IntegrationConfigFactory $integrationConfigFactory,
     )
     {
     }
@@ -63,6 +65,10 @@ class IntegrationCreateInputProcessor implements ProcessorInterface
             ->setIntegrationType($integrationType)
             ->setCreatedAt(new \DateTimeImmutable())
             ->setLocaleCode($data->localeCode);
+
+        $integrationConfigService = $this->integrationConfigFactory->getIntegrationConfig($integrationType->getIntegrationCode());
+        $integrationConfig = $integrationConfigService->onCreate($data, $integration);
+        $this->em->persist($integrationConfig);
 
         return $this->persistProcessor->process($integration, $operation, $uriVariables, $context);
     }

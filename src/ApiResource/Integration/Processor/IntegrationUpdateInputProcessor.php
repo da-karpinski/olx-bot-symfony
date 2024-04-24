@@ -6,6 +6,7 @@ use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
 use App\ApiResource\Integration\Dto\IntegrationUpdateInput;
 use App\Entity\Integration;
+use App\Integration\IntegrationConfigFactory;
 use App\Integration\IntegrationFactory;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
@@ -21,6 +22,7 @@ class IntegrationUpdateInputProcessor implements ProcessorInterface
         private readonly IntegrationFactory $integrationFactory,
         #[Autowire(service: 'api_platform.doctrine.orm.state.persist_processor')]
         private ProcessorInterface $persistProcessor,
+        private readonly IntegrationConfigFactory $integrationConfigFactory,
     )
     {
     }
@@ -54,6 +56,11 @@ class IntegrationUpdateInputProcessor implements ProcessorInterface
             }
 
             $integration->setLocaleCode($data->localeCode);
+        }
+
+        if(!empty($data->integrationConfig)) {
+            $integrationConfig = $this->integrationConfigFactory->getIntegrationConfig($integration->getIntegrationType()->getIntegrationCode());
+            $integrationConfig->onUpdate($data, $integration);
         }
 
         return $this->persistProcessor->process($integration, $operation, $uriVariables, $context);

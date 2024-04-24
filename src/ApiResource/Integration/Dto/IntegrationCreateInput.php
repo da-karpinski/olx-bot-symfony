@@ -31,4 +31,12 @@ class IntegrationCreateInput
     #[Assert\NotBlank]
     public ?string $localeCode;
 
+    #[Groups(['integration:view', 'integration:write'])]
+    #[ApiProperty(openapiContext: ['type' => 'array', 'example' => [
+        'key1' => 'value1',
+        'key2' => 'value2'
+    ]])]
+    #[Assert\NotBlank]
+    public ?array $integrationConfig;
+
 }

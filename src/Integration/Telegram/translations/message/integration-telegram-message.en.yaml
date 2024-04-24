@@ -25,3 +25,8 @@ notification:
       description: 'Description'
       price: 'Price'
       link: 'Link'
+
+configuration:
+  success: 'Configuration of your integration "{{ integrationName }}" was successful! Now you can link the worker(s) to this integration and start receiving notifications.'
+  otp-not-found: 'The OTP code was not found. Please try again.'
+  update-not-allowed: 'Updating Telegram integration is not allowed. Create a new integration instead.'

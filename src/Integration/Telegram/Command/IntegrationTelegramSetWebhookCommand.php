@@ -49,11 +49,11 @@ class IntegrationTelegramSetWebhookCommand extends Command
             $model->method(),
             $this->apiUrl . str_replace('{token}', $this->botToken, $model->uri()),
             [
-                'headers' => $model->headers($this->botToken),
+                'headers' => $model->headers(),
                 'json' => [
                     'url' => $webhookUrl,
                     'secret_token' => $this->secretToken,
-                    'allowed_updates' => ['message'],
+                    'allowed_updates' => ['message', 'my_chat_member'],
                 ],
             ]
         );

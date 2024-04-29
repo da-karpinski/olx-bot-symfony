@@ -15,6 +15,10 @@ webhook:
     already-disabled: 'Powiadomienia zostały już wyłączone. Nie będziesz otrzymywać powiadomień, ale możesz je włączyć w dowolnym momencie, używając polecenia /enable.'
     disabled: 'Powiadomienia zostały wyłączone. Nie będziesz już otrzymywać więcej powiadomień, ale możesz je włączyć w dowolnym momencie, używając polecenia /enable.'
 
+  chat-member:
+    existing: 'Witam ponownie! Gdy zostałem ostanio usunięty z tej grupy, postanowiłem automatycznie wyłączyć powiadomienia dla tej integracji. Żebym mógł zacząć wysyłać powiadomienia ponownie, musisz je włączyć - zrobić to możesz używając polecenia /enable.'
+    new: 'Cześć! Jestem OLX Bot i jestem tutaj, aby natychmiastowo informować członków tej grupy o nowych ofertach, które znalazłem. Aby rozpocząć konfigurację, utwórz nową integrację poprzez panel i skonfiguruj ją zgodnie z instrukcjami.'
+
   unknown-command: "Hmm, nie rozumiem tego polecenia. Użyj: \n /start, aby połączyć swoje konto; \n /enable, aby włączyć powiadomienia; \n /disable, aby wyłączyć powiadomienia."
 
 notification:

@@ -15,6 +15,10 @@ webhook:
     already-disabled: 'Notifications are already disabled. You will not receive notifications, but you can enable them anytime using /enable command.'
     disabled: 'Notifications disabled successfully. You will not receive notifications from now on. If you want to enable notifications, use /enable command.'
 
+  chat-member:
+    existing: 'Welcome back! Since I was removed from this group last time, I decided to automatically disable notifications for this integration. To start receiving notifications again, you need to enable them - you can do this using the /enable command.'
+    new: 'Hi! I am OLX Bot and I am here to instantly inform members of this group about new offers I found. To start the configuration, create a new integration through the panel and configure it according to the instructions.'
+
   unknown-command: "Hmm, I don't understand this command. Please use: \n /start to link your account; \n /enable to enable notifications; \n /disable to disable notifications."
 
 notification:

@@ -44,8 +44,9 @@ class TelegramApiWebhookService
             throw new IntegrationException('[Telegram Webhook]: Empty update.', Level::Error, $this->integrationLogger);
         }
 
-        $this->translator->setLocale($update['from']['language_code'] ?? 'en');
+        $this->setLocale($update);
 
+        /** Handle commands (entities) */
         if(!empty($update['entities'])){
             $command = substr($update['text'], $update['entities'][0]['offset'], $update['entities'][0]['length']);
 
@@ -63,6 +64,39 @@ class TelegramApiWebhookService
                 '/disable' => $this->disableUser($update, $telegramIntegration),
                 default => $this->handleUnsupportedCommand($update),
             };
+        }
+
+        /** Handle member left event */
+        if(!empty($update['left_chat_member'])){
+
+            $botId = explode(':', $this->botToken)[0];
+
+            if($update['left_chat_member']['id'] === (int)$botId){
+                $telegramIntegration = $this->entityManager->getRepository(TelegramIntegration::class)->findOneBy(['chatId' => $update['chat']['id']]);
+                if($telegramIntegration){
+                    $telegramIntegration->setActive(false);
+                    $this->entityManager->persist($telegramIntegration);
+                    $this->entityManager->flush();
+                }
+            }
+        }
+
+        /** Handle new member event */
+        if(!empty($update['new_chat_members'])){
+
+            $botId = explode(':', $this->botToken)[0];
+
+            foreach ($update['new_chat_members'] as $newMember){
+
+                if($newMember['id'] === (int)$botId){
+                    $telegramIntegration = $this->entityManager->getRepository(TelegramIntegration::class)->findOneBy(['chatId' => $update['chat']['id']]);
+                    if($telegramIntegration){
+                        $this->sendMessage(['chat_id' => $update['chat']['id'], 'text' => $this->translator->trans('webhook.chat-member.existing', [], 'integration-telegram-message')]);
+                    }else{
+                        $this->sendMessage(['chat_id' => $update['chat']['id'], 'text' => $this->translator->trans('webhook.chat-member.new', [], 'integration-telegram-message')]);
+                    }
+                }
+            }
         }
     }
 
@@ -140,13 +174,23 @@ class TelegramApiWebhookService
             TelegramApi::sendMessage->method(),
             $this->apiUrl . str_replace('{token}', $this->botToken, TelegramApi::sendMessage->uri()),
             [
-                'headers' => $model->headers($this->botToken),
+                'headers' => $model->headers(),
                 'json' => $payload
             ]
         );
 
         if(!$response[$model->dataKey()]){
             throw new IntegrationException('[Telegram Webhook]: Error sending message. Response: ' . json_encode($response), Level::Critical, $this->integrationLogger);
+        }
+    }
+
+    private function setLocale(array $update): void
+    {
+        $telegramIntegration = $this->entityManager->getRepository(TelegramIntegration::class)->findOneBy(['chatId' => $update['chat']['id']]);
+        if($telegramIntegration){
+            $this->translator->setLocale($telegramIntegration->getIntegration()->getLocaleCode());
+        }else{
+            $this->translator->setLocale($update['from']['language_code'] ?? 'en');
         }
     }
 

@@ -6,6 +6,11 @@ error:
       not-found: 'Category not found.'
       attributes-not-found: 'Category attributes not found.'
 
+  olx-public-api:
+    offer:
+      not-found: 'Offer not found.'
+      gone: 'Offer is no longer available. It may have been deleted or expired.'
+
   category:
     not-found: 'Category not found.'
     attributes-not-found: 'Category attributes not found.'

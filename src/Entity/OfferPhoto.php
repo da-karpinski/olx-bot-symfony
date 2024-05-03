@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\OfferPhotoRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: OfferPhotoRepository::class)]
@@ -23,8 +24,11 @@ class OfferPhoto
     #[ORM\Column(length: 255)]
     private ?string $realFileName = null;
 
+    #[ORM\Column(type: Types::BIGINT)]
+    private ?string $olxId = null;
+
     #[ORM\Column]
-    private ?int $olxId = null;
+    private ?int $photoOrder = null;
 
     public function getId(): ?int
     {
@@ -67,14 +71,26 @@ class OfferPhoto
         return $this;
     }
 
-    public function getOlxId(): ?int
+    public function getOlxId(): ?string
     {
         return $this->olxId;
     }
 
-    public function setOlxId(int $olxId): static
+    public function setOlxId(string $olxId): static
     {
         $this->olxId = $olxId;
+
+        return $this;
+    }
+
+    public function getPhotoOrder(): ?int
+    {
+        return $this->photoOrder;
+    }
+
+    public function setPhotoOrder(int $photoOrder): static
+    {
+        $this->photoOrder = $photoOrder;
 
         return $this;
     }

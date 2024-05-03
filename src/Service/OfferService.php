@@ -16,7 +16,8 @@ class OfferService
     public function __construct(
         private readonly EntityManagerInterface $em,
         private readonly GetOffersForWorkerService $getOffersForWorkerService,
-        private readonly IntegrationFactory $integrationFactory
+        private readonly IntegrationFactory $integrationFactory,
+        private readonly OfferPhotoService $offerPhotoService
     )
     {
     }
@@ -59,7 +60,7 @@ class OfferService
                         $this->em->persist($offerParameter);
                     }
                 }
-                //TODO: download offer photos
+                $this->offerPhotoService->getPhotosForOffer($offer, $olxOffer);
                 $newOffers[] = $offer;
                 $results['new']++;
             }

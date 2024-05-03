@@ -6,6 +6,11 @@ error:
       not-found: 'Nie znaleziono kategorii.'
       attributes-not-found: 'Nie znaleziono atrybutów dla tej kategorii.'
 
+  olx-public-api:
+    offer:
+      not-found: 'Nie znaleziono oferty.'
+      gone: 'Oferta nie jest już dostępna, ponieważ została usunięta lub wygasła.'
+
   category:
     not-found: 'Nie znaleziono kategorii.'
     attributes-not-found: 'Nie znaleziono atrybutów dla tej kategorii.'

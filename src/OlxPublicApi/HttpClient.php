@@ -41,7 +41,7 @@ class HttpClient implements OlxPublicApiInterface
 
     public function isResponseValid(ResponseInterface $response) : bool
     {
-        return $response->getStatusCode() === Response::HTTP_OK and $this->getResponseContentType($response) === 'application/json';
+        return in_array($response->getStatusCode(), [Response::HTTP_OK, Response::HTTP_NOT_FOUND, Response::HTTP_GONE]);
     }
 
     public function request(string $method, string $uri, mixed $data) : mixed
@@ -75,16 +75,18 @@ class HttpClient implements OlxPublicApiInterface
 
         if (!$responseBody = json_decode($responseBody, true)) {
 
-            throw new OlxPublicApiException(
-                '[OLX Public API] API returned unsupported response body',
-                $this->getResponseCode($response),
-                $this->olxPublicApiLogger,
-                $data,
-                $uri
-            );
+            if($response->getStatusCode() !== Response::HTTP_GONE){
+                throw new OlxPublicApiException(
+                    '[OLX Public API] API returned unsupported response body',
+                    $this->getResponseCode($response),
+                    $this->olxPublicApiLogger,
+                    $data,
+                    $uri
+                );
+            }
         }
 
-        if (Response::HTTP_OK !== $this->getResponseCode($response)) {
+        if (!$this->isResponseValid($response)) {
 
             $errorDetail = $responseBody["error"]["detail"];
 
